@@ -1,0 +1,26 @@
+package com.gigaprod.gigafilm.ui.main
+
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import androidx.appcompat.app.AppCompatActivity
+import com.gigaprod.gigafilm.R
+
+class SplashActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_splash)
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            val token = getSharedPreferences("auth", MODE_PRIVATE).getString("token", null)
+            if (token != null) {
+                startActivity(Intent(this, MainActivity::class.java))
+            } else {
+                startActivity(Intent(this, AuthActivity::class.java))
+            }
+            finish()
+        }, 1500)
+    }
+}
