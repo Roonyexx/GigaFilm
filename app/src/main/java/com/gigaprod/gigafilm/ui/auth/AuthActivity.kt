@@ -1,12 +1,8 @@
-package com.gigaprod.gigafilm.ui.main
+package com.gigaprod.gigafilm.ui.auth
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import com.gigaprod.gigafilm.R
-import com.gigaprod.gigafilm.ui.auth.LoginFragment
-import com.gigaprod.gigafilm.ui.auth.RegisterFragment
 
 class AuthActivity : AppCompatActivity() {
 

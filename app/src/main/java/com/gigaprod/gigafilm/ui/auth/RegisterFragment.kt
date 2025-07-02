@@ -9,14 +9,22 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.edit
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.gigaprod.gigafilm.R
-import com.gigaprod.gigafilm.ui.main.AuthActivity
+import com.gigaprod.gigafilm.api.ApiClient
+import com.gigaprod.gigafilm.api.LoginRequest
+import com.gigaprod.gigafilm.api.RegisterRequest
 import com.gigaprod.gigafilm.ui.main.MainActivity
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
+
 
 class RegisterFragment : Fragment() {
 
-    private lateinit var emailInput: EditText
+    private lateinit var loginInput: EditText
     private lateinit var passwordInput: EditText
     private lateinit var registerButton: Button
     private lateinit var loginLink: TextView
@@ -26,23 +34,41 @@ class RegisterFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_register, container, false)
 
-        emailInput = view.findViewById(R.id.emailInput)
+        loginInput = view.findViewById(R.id.loginInput)
         passwordInput = view.findViewById(R.id.passwordInput)
         registerButton = view.findViewById(R.id.registerButton)
         loginLink = view.findViewById(R.id.loginLink)
 
         registerButton.setOnClickListener {
-            val email = emailInput.text.toString()
+            val login = loginInput.text.toString()
             val password = passwordInput.text.toString()
 
-            // Пример успешной регистрации:
-            val token = "registered_token"
-            requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE)
-                .edit().putString("token", token).apply()
+            lifecycleScope.launch {
+                try {
+                    val response = ApiClient.serverApi.register(RegisterRequest(login , password))
+                    if (response.isSuccessful) {
+                        val success = response.body()?.ok
+                        showToast(success.toString())
+                        if (success == true) {
 
-            startActivity(Intent(requireContext(), MainActivity::class.java))
-            requireActivity().finish()
+                            val response = ApiClient.serverApi.login(LoginRequest(login , password))
+                            val token = response.body()?.access_token
+                            requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE)
+                                .edit { putString("token", token) }
+                            startActivity(Intent(requireContext(), MainActivity::class.java))
+                            requireActivity().finish()
+                        } else {
+                            showToast("Ошибка:Логин занят другим пользователем")
+                        }
+                    } else {
+                        showToast("POXUI")
+                    }
+                } catch (e: Exception) {
+                    Snackbar.make(view,e.toString(), Snackbar.LENGTH_INDEFINITE).show()
+                }
+            }
         }
+
 
         loginLink.setOnClickListener {
             (activity as? AuthActivity)?.showLoginFragment()
@@ -50,4 +76,10 @@ class RegisterFragment : Fragment() {
 
         return view
     }
+
+    fun showToast(text: String) {
+        Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
+    }
 }
+
+

@@ -1,22 +1,16 @@
-package com.gigaprod.gigafilm.ui.auth
+package com.gigaprod.gigafilm.ui.main
 
-import android.graphics.Canvas
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gigaprod.gigafilm.R
 import com.gigaprod.gigafilm.adapter.MovieAdapter
 import com.gigaprod.gigafilm.model.Movie
 import com.gigaprod.gigafilm.ui.custom.CardStackLayoutManager
-import kotlin.system.exitProcess
-
 
 class MoviesFragment : Fragment() {
 
@@ -68,12 +62,36 @@ class MoviesFragment : Fragment() {
 
     private fun sampleMovies(): List<Movie> {
         return listOf(
-            Movie("zzzzzz", "zzzzzzzzzzzzzzzzzzz","https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/430042eb-ee69-4818-aed0-a312400a26bf/300x450"),
-            Movie("zzzzzz1", "zzzzzzzzzzzzzzzzzzz2","https://www.themoviedb.org/t/p/w600_and_h900_bestv2/AdIhqttutOdkKUttw8ofld870Dx.jpg"),
-            Movie("zzzzzz3", "zzzzzzzzzzzzzzzzzzz3","https://www.themoviedb.org/t/p/w600_and_h900_bestv2/8uOIWsrHvBTeZP4LSf25NomvLb6.jpg"),
-            Movie("zzzzzz4", "zzzzzzzzzzzzzzzzzzz4", "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/aOpByJVRjjKncEYIOQZD3CcpYdE.jpg"),
-            Movie("zzzzzz5", "zzzzzzzzzzzzzzzzzzz5", "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/lXjjq925EMCWEBh9iISMFLKrBtg.jpg"),
-            Movie("Человек-паук: Через вселенные", "2018, фильм", "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/wmEKJr81CABBU68Qy2wYPwQHn0L.jpg")
+            Movie(
+                "zzzzzz",
+                "zzzzzzzzzzzzzzzzzzz",
+                "https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/430042eb-ee69-4818-aed0-a312400a26bf/300x450"
+            ),
+            Movie(
+                "zzzzzz1",
+                "zzzzzzzzzzzzzzzzzzz2",
+                "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/AdIhqttutOdkKUttw8ofld870Dx.jpg"
+            ),
+            Movie(
+                "zzzzzz3",
+                "zzzzzzzzzzzzzzzzzzz3",
+                "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/8uOIWsrHvBTeZP4LSf25NomvLb6.jpg"
+            ),
+            Movie(
+                "zzzzzz4",
+                "zzzzzzzzzzzzzzzzzzz4",
+                "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/aOpByJVRjjKncEYIOQZD3CcpYdE.jpg"
+            ),
+            Movie(
+                "zzzzzz5",
+                "zzzzzzzzzzzzzzzzzzz5",
+                "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/lXjjq925EMCWEBh9iISMFLKrBtg.jpg"
+            ),
+            Movie(
+                "Человек-паук: Через вселенные",
+                "2018, фильм",
+                "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/wmEKJr81CABBU68Qy2wYPwQHn0L.jpg"
+            )
         )
     }
 }
