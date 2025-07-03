@@ -17,10 +17,6 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_splash)
-        getSharedPreferences("auth", Context.MODE_PRIVATE)
-            .edit {
-                remove("token")
-            }
         ApiClient.init(this)
 
         Handler(Looper.getMainLooper()).postDelayed({
