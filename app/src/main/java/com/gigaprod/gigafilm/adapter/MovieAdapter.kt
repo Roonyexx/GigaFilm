@@ -44,5 +44,16 @@ class MovieAdapter(
         movies.add(movie)
     }
 
+    fun addMovie(movie: Movie) {
+        movies.add(movie)
+        notifyItemInserted(movies.size)
+    }
+
+    fun addMovieList(movieList: MutableList<Movie>) {
+        for (movie in movieList) {
+            addMovie(movie)
+        }
+    }
+
     fun currentList(): List<Movie> = movies
 }
