@@ -8,13 +8,20 @@ import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
 import com.gigaprod.gigafilm.R
+import com.gigaprod.gigafilm.api.ApiClient
 import com.gigaprod.gigafilm.ui.auth.AuthActivity
 import com.gigaprod.gigafilm.ui.main.MainActivity
 
 class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_splash)
+        getSharedPreferences("auth", Context.MODE_PRIVATE)
+            .edit {
+                remove("token")
+            }
+        ApiClient.init(this)
 
         Handler(Looper.getMainLooper()).postDelayed({
 

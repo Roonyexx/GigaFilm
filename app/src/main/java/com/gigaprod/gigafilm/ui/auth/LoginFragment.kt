@@ -41,7 +41,7 @@ class LoginFragment : Fragment() {
 
             lifecycleScope.launch {
                 try {
-                    val response = ApiClient.serverApi.login(LoginRequest(login , password))
+                    val response = ApiClient.serverAuthApi.login(LoginRequest(login , password),)
                     if (response.isSuccessful) {
                         val token = response.body()?.access_token
                         if (token != null) {

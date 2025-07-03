@@ -45,13 +45,12 @@ class RegisterFragment : Fragment() {
 
             lifecycleScope.launch {
                 try {
-                    val response = ApiClient.serverApi.register(RegisterRequest(login , password))
+                    val response = ApiClient.serverAuthApi.register(RegisterRequest(login , password))
                     if (response.isSuccessful) {
                         val success = response.body()?.ok
-                        showToast(success.toString())
                         if (success == true) {
 
-                            val response = ApiClient.serverApi.login(LoginRequest(login , password))
+                            val response = ApiClient.serverAuthApi.login(LoginRequest(login , password),)
                             val token = response.body()?.access_token
                             requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE)
                                 .edit { putString("token", token) }
@@ -61,7 +60,7 @@ class RegisterFragment : Fragment() {
                             showToast("Ошибка:Логин занят другим пользователем")
                         }
                     } else {
-                        showToast("POXUI")
+                        showToast("Ошибка подключения к серверу")
                     }
                 } catch (e: Exception) {
                     Snackbar.make(view,e.toString(), Snackbar.LENGTH_INDEFINITE).show()
