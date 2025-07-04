@@ -6,10 +6,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
 
 import com.gigaprod.gigafilm.R
 import com.gigaprod.gigafilm.model.Movie
 import com.bumptech.glide.*
+
 
 
 class MovieAdapter(
@@ -31,6 +33,7 @@ class MovieAdapter(
     override fun getItemCount(): Int = movies.size
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
+
         val movie = movies[position]
         holder.title.text = movie.title
         holder.description.text = movie.description
