@@ -1,9 +1,11 @@
 package com.gigaprod.gigafilm.ui.main
 
+import android.graphics.Canvas
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -11,10 +13,7 @@ import com.gigaprod.gigafilm.R
 import com.gigaprod.gigafilm.adapter.MovieAdapter
 import com.gigaprod.gigafilm.model.Movie
 import com.gigaprod.gigafilm.ui.custom.CardStackLayoutManager
-import android.graphics.Canvas
-import android.view.animation.DecelerateInterpolator
-import android.widget.Toast
-import kotlin.math.abs
+import com.gigaprod.gigafilm.ui.dialog.MovieInfoBottomSheet
 
 class MoviesFragment : Fragment() {
 
@@ -63,6 +62,17 @@ class MoviesFragment : Fragment() {
                         Toast.makeText(requireContext(), "RIGHT: ${movie.title}", Toast.LENGTH_SHORT).show()
                         adapter.removeAt(position)
                     }
+                    ItemTouchHelper.UP -> {
+                        MovieInfoBottomSheet(movie).show(parentFragmentManager, "movie_info")
+
+                        viewHolder.itemView.animate()
+                            .translationX(0f)
+                            .translationY(0f)
+                            .setDuration(200)
+                            .start()
+                        adapter.notifyItemChanged(position)
+                    }
+
                 }
             }
 
@@ -83,32 +93,10 @@ class MoviesFragment : Fragment() {
                 if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
                     viewHolder.itemView.translationX = dX
                     viewHolder.itemView.translationY = clampedDY
-
-                    if (!isCurrentlyActive && dY < -80 && abs(dX) < 50f && !infoShown) {
-                        infoShown = true
-
-                        val position = viewHolder.adapterPosition
-                        if (position != RecyclerView.NO_POSITION) {
-                            val movie = adapter.currentList()[position]
-                            Toast.makeText(requireContext(), "UP: ${movie.description}", Toast.LENGTH_SHORT).show()
-                        }
-
-                        viewHolder.itemView.animate()
-                            .translationX(0f)
-                            .translationY(0f)
-                            .setDuration(200)
-                            .withEndAction {
-                                infoShown = false
-                            }
-                            .setInterpolator(DecelerateInterpolator())
-                            .start()
-                    }
                 } else {
                     super.onChildDraw(c, recyclerView, viewHolder, dX, clampedDY, actionState, isCurrentlyActive)
                 }
             }
-
-
         })
 
 
