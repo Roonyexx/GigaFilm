@@ -6,11 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.gigaprod.gigafilm.R
 import com.gigaprod.gigafilm.model.Movie
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.color.MaterialColors
 
 class MovieInfoBottomSheet(private val movie: Movie) : BottomSheetDialogFragment() {
 
@@ -28,6 +31,36 @@ class MovieInfoBottomSheet(private val movie: Movie) : BottomSheetDialogFragment
 
         val posterImageView = view.findViewById<ImageView>(R.id.posterImageView)
         Glide.with(this).load(movie.imageUrl).into(posterImageView)
+
+
+        val ratingViews = listOf(
+            R.id.rating1, R.id.rating2, R.id.rating3, R.id.rating4, R.id.rating5,
+            R.id.rating6, R.id.rating7, R.id.rating8, R.id.rating9, R.id.rating10
+        ).map { view.findViewById<TextView>(it) }
+
+
+        val defaultColor = MaterialColors.getColor(view, com.google.android.material.R.attr.colorOnSurface)
+
+        ratingViews.forEachIndexed { index, textView ->
+            textView.setOnClickListener {
+
+                ratingViews.forEach { it.setTextColor(defaultColor) }
+
+
+                val selectedRating = index + 1
+                val colorRes = when {
+                    selectedRating <= 4 -> R.color.rating_red
+                    selectedRating <= 6 -> R.color.rating_gray
+                    else -> R.color.rating_green
+                }
+                val selectedColor = ContextCompat.getColor(requireContext(), colorRes)
+
+
+                textView.setTextColor(selectedColor)
+
+                Toast.makeText(requireContext(), "Оценка: $selectedRating", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
     override fun getTheme() = R.style.AppBottomSheetDialogTheme
 
@@ -36,7 +69,7 @@ class MovieInfoBottomSheet(private val movie: Movie) : BottomSheetDialogFragment
         dialog?.window?.attributes?.windowAnimations = R.style.DialogAnimation
         dialog?.let { dlg ->
             val bottomSheet = dlg.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-            bottomSheet?.layoutParams?.height = (resources.displayMetrics.heightPixels * 0.5).toInt()
+            bottomSheet?.layoutParams?.height = (resources.displayMetrics.heightPixels * 0.8).toInt()
             val behavior = BottomSheetBehavior.from(bottomSheet!!)
             behavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
