@@ -71,13 +71,16 @@
             android:weightSum="11"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            android:paddingHorizontal="8dp">
+            android:paddingHorizontal="8dp"
+            android:layout_marginHorizontal="8dp"
+            android:elevation="8dp">
 
             <ImageView
                 android:id="@+id/starIcon"
                 android:layout_width="0dp"
+                android:layout_marginHorizontal="8dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:src="@drawable/ic_star"
                 app:tint="?attr/colorOnSurface"
                 android:layout_gravity="center"/>
@@ -134,7 +137,8 @@
                 style="@style/RatingNumberStyle"
                 android:layout_weight="1"
                 android:text="10"
-                android:paddingRight="10dp"/>
+                android:paddingRight="6dp"
+                />
         </LinearLayout>
 
 
