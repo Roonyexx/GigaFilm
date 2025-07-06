@@ -7,56 +7,80 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.fragment.app.Fragment
 import com.gigaprod.gigafilm.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
-
+import android.view.ViewTreeObserver
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var bottomNavigationView: BottomNavigationView
+    private lateinit var moviesFragment: MoviesFragment
+    private lateinit var profileFragment: ProfileFragment
+    private var activeFragment: Fragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         bottomNavigationView = findViewById(R.id.bottom_navigation)
+        moviesFragment = MoviesFragment()
+        profileFragment = ProfileFragment()
 
         val fragmentContainer = findViewById<FrameLayout>(R.id.fragmentContainer)
 
-        ViewCompat.setOnApplyWindowInsetsListener(fragmentContainer) { view, insets ->
-            val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            view.updatePadding(
-                left = systemBarsInsets.left,
-                top = systemBarsInsets.top,
-                right = systemBarsInsets.right,
-                bottom = bottomNavigationView.height.coerceAtLeast(systemBarsInsets.bottom)
-            )
-            insets
-        }
+        bottomNavigationView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                bottomNavigationView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                val navHeight = bottomNavigationView.height
 
+                ViewCompat.setOnApplyWindowInsetsListener(fragmentContainer) { view, insets ->
+                    val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                    view.updatePadding(
+                        left = systemBarsInsets.left,
+                        top = systemBarsInsets.top,
+                        right = systemBarsInsets.right,
+                        bottom = navHeight.coerceAtLeast(systemBarsInsets.bottom)
+                    )
+                    insets
+                }
 
-        if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, MoviesFragment())
-                .commit()
-        }
-
-        bottomNavigationView.setOnItemSelectedListener { item ->
-            val fragment = when (item.itemId) {
-                R.id.nav_home -> MoviesFragment()
-                //R.id.nav_search -> SearchFragment()
-                R.id.nav_profile -> ProfileFragment()
-                else -> null
+                ViewCompat.requestApplyInsets(fragmentContainer)
             }
+        })
 
-            fragment?.let {
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainer, it)
-                    .commit()
-                true
-            } ?: false
+        setupFragments()
+        setupBottomNavigation()
+    }
+
+    private fun setupFragments() {
+        supportFragmentManager.beginTransaction()
+            .add(R.id.fragmentContainer, moviesFragment, "moviesFragment")
+            .add(R.id.fragmentContainer, profileFragment, "profileFragment")
+            .hide(profileFragment)
+            .commit()
+
+        activeFragment = moviesFragment
+    }
+
+    private fun setupBottomNavigation() {
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> switchFragment(moviesFragment)
+                R.id.nav_profile -> switchFragment(profileFragment)
+            }
+            true
         }
+    }
 
+    private fun switchFragment(target: Fragment) {
+        if (activeFragment == target) return
 
+        supportFragmentManager.beginTransaction()
+            .hide(activeFragment!!)
+            .show(target)
+            .commit()
+
+        activeFragment = target
     }
 }
