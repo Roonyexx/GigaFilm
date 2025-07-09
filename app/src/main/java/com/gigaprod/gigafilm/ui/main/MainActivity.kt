@@ -17,6 +17,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var moviesFragment: MoviesFragment
     private lateinit var profileFragment: ProfileFragment
+    private lateinit var searchFragment: SearchFragment
     private var activeFragment: Fragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView = findViewById(R.id.bottom_navigation)
         moviesFragment = MoviesFragment()
         profileFragment = ProfileFragment()
+        searchFragment = SearchFragment()
 
         val fragmentContainer = findViewById<FrameLayout>(R.id.fragmentContainer)
 
@@ -57,7 +59,9 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .add(R.id.fragmentContainer, moviesFragment, "moviesFragment")
             .add(R.id.fragmentContainer, profileFragment, "profileFragment")
+            .add(R.id.fragmentContainer,searchFragment, "searchFragment")
             .hide(profileFragment)
+            .hide(searchFragment)
             .commit()
 
         activeFragment = moviesFragment
@@ -68,6 +72,7 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.nav_home -> switchFragment(moviesFragment)
                 R.id.nav_profile -> switchFragment(profileFragment)
+                R.id.nav_search -> switchFragment(searchFragment)
             }
             true
         }
