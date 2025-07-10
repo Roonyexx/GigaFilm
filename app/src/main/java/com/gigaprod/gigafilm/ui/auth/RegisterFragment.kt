@@ -54,6 +54,7 @@ class RegisterFragment : Fragment() {
                             val token = response.body()?.access_token
                             requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE)
                                 .edit { putString("token", token) }
+                            ApiClient.setToken(token!!)
                             startActivity(Intent(requireContext(), MainActivity::class.java))
                             requireActivity().finish()
                         } else {

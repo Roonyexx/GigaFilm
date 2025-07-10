@@ -23,6 +23,7 @@ class SplashActivity : AppCompatActivity() {
 
             val token = getSharedPreferences("auth", MODE_PRIVATE).getString("token", null)
             if (token != null) {
+                ApiClient.setToken(token)
                 startActivity(Intent(this, MainActivity::class.java))
             } else {
                 startActivity(Intent(this, AuthActivity::class.java))

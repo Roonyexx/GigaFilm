@@ -6,12 +6,15 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.SimpleItemAnimator
 
 import com.gigaprod.gigafilm.R
 import com.gigaprod.gigafilm.model.Movie
-import com.bumptech.glide.*
-import org.w3c.dom.Text
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
+import android.graphics.drawable.Drawable
+import com.bumptech.glide.Glide
 
 
 class MovieListAdapter(
@@ -37,7 +40,8 @@ class MovieListAdapter(
         val movie = movies[position]
         holder.title.text = movie.title
         holder.userRating.text = movie.userRating?.toString() ?: "-"
-        Glide.with(holder.itemView).load(movie.imageUrl).override(160,240).into(holder.image)
+        val url    = "https://image.tmdb.org/t/p/w600_and_h900_bestv2" + movie.poster_path
+        Glide.with(holder.itemView).load(url).override(160,240).into(holder.image)
 
     }
 

@@ -30,7 +30,7 @@ class MovieInfoBottomSheet(private val movie: Movie) : BottomSheetDialogFragment
         view.findViewById<TextView>(R.id.descriptionTextView).text = movie.description
 
         val posterImageView = view.findViewById<ImageView>(R.id.posterImageView)
-        Glide.with(this).load(movie.imageUrl).into(posterImageView)
+        Glide.with(this).load(movie.poster_path).into(posterImageView)
 
 
         val ratingViews = listOf(

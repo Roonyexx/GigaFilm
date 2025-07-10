@@ -9,7 +9,7 @@ import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManagerFactory
 import javax.net.ssl.X509TrustManager
 
-fun getSafeOkHttpClient(context: Context): OkHttpClient {
+fun getSafeOkHttpClient(context: Context, token: String?): OkHttpClient {
     val cf = CertificateFactory.getInstance("X.509")
     val caInput = context.resources.openRawResource(R.raw.server)
     val ca = caInput.use { cf.generateCertificate(it) }
@@ -29,5 +29,12 @@ fun getSafeOkHttpClient(context: Context): OkHttpClient {
 
     return OkHttpClient.Builder()
         .sslSocketFactory(sslContext.socketFactory, tmf.trustManagers[0] as X509TrustManager)
+        .addInterceptor { chain ->
+            val requestBuilder = chain.request().newBuilder()
+            token?.let {
+                requestBuilder.addHeader("Authorization", "Bearer $it")
+            }
+            chain.proceed(requestBuilder.build())
+        }
         .build()
 }

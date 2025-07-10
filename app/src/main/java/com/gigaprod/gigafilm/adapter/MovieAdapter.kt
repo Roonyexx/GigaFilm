@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.SimpleItemAnimator
 
 import com.gigaprod.gigafilm.R
 import com.gigaprod.gigafilm.model.Movie
@@ -37,7 +36,7 @@ class MovieAdapter(
         val movie = movies[position]
         holder.title.text = movie.title
         holder.description.text = movie.description
-        Glide.with(holder.itemView).load(movie.imageUrl).override(800,1200).into(holder.image)
+        Glide.with(holder.itemView).load(movie.poster_path).override(800,1200).into(holder.image)
     }
 
     fun removeAt(position: Int) {

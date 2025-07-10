@@ -10,16 +10,24 @@ object ApiClient {
     private var retrofit: Retrofit? = null
     private var token: String? = null
     lateinit var serverAuthApi: authApi private set
-
     lateinit var serverSearchApi: searchApi private set
+    lateinit var serverProfileApi: profileApi private set
+    private lateinit var appContext: Context
+
+    fun setToken(newToken: String) {
+        token = newToken
+        init(appContext)
+    }
 
     fun init(context: Context) {
+        appContext = context.applicationContext
         retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .client(getSafeOkHttpClient(context))
+            .client(getSafeOkHttpClient(context, token))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         serverAuthApi = retrofit!!.create(authApi::class.java)
         serverSearchApi = retrofit!!.create(searchApi::class.java)
+        serverProfileApi = retrofit!!.create(profileApi::class.java)
     }
 }
