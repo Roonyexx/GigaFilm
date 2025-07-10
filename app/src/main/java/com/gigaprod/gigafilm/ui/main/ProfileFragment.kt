@@ -1,5 +1,6 @@
 package com.gigaprod.gigafilm.ui.main
 
+import Content
 import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -12,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.gigaprod.gigafilm.R
 import com.gigaprod.gigafilm.adapter.MovieListAdapter
 import com.gigaprod.gigafilm.api.ApiClient
-import com.gigaprod.gigafilm.model.Movie
 import kotlinx.coroutines.launch
 import kotlin.math.max
 
@@ -35,7 +35,7 @@ class ProfileFragment : Fragment() {
         recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
 
         lifecycleScope.launch {
-            val profileMovies: List<Movie> = ApiClient.serverProfileApi.getUserFilms()
+            val profileMovies: List<Content> = ApiClient.serverProfileApi.getUserFilms()
             movieAdapter = MovieListAdapter(profileMovies.toMutableList())
             recyclerView.adapter = movieAdapter
         }

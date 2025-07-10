@@ -1,17 +1,17 @@
 package com.gigaprod.gigafilm.ui.main
 
+import Content
+import Movie
 import android.graphics.Canvas
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.gigaprod.gigafilm.R
 import com.gigaprod.gigafilm.adapter.MovieAdapter
-import com.gigaprod.gigafilm.model.Movie
 import com.gigaprod.gigafilm.ui.custom.CardStackLayoutManager
 import com.gigaprod.gigafilm.ui.dialog.MovieInfoBottomSheet
 
@@ -53,13 +53,9 @@ class MoviesFragment : Fragment() {
 
                 when (direction) {
                     ItemTouchHelper.LEFT -> {
-                        println("LEFT: ${movie.title}")
-                        Toast.makeText(requireContext(), "LEFT: ${movie.title}", Toast.LENGTH_SHORT).show()
                         adapter.removeAt(position)
                     }
                     ItemTouchHelper.RIGHT -> {
-                        println("RIGHT: ${movie.title}")
-                        Toast.makeText(requireContext(), "RIGHT: ${movie.title}", Toast.LENGTH_SHORT).show()
                         adapter.removeAt(position)
                     }
                     ItemTouchHelper.UP -> {
@@ -103,37 +99,75 @@ class MoviesFragment : Fragment() {
         itemTouchHelper.attachToRecyclerView(recyclerView)
     }
 
-    private fun sampleMovies(): List<Movie> {
+    private fun sampleMovies(): List<Content> {
         return listOf(
             Movie(
-                "zzzzzz",
-                "zzzzzzzzzzzzzzzzzzz",
-                "https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/430042eb-ee69-4818-aed0-a312400a26bf/300x450"
+                id = 1,
+                title = "Inception",
+                original_title = "Inception",
+                overview = "A mind-bending thriller where dreams can be controlled.",
+                poster_path = "https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/430042eb-ee69-4818-aed0-a312400a26bf/300x450",
+                vote_average = 8.8f,
+                vote_count = 20000,
+                actors = listOf(),
+                genres = listOf("Action", "Sci-Fi", "Thriller"),
+                status_id = 1,
+                user_score = 9,
+                release_date = "2010-07-16",
+                budget = 160000000,
+                revenue = 1234,
+                runtime = 148
             ),
             Movie(
-                "zzzzzz1",
-                "zzzzzzzzzzzzzzzzzzz2",
-                "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/AdIhqttutOdkKUttw8ofld870Dx.jpg"
+                id = 1,
+                title = "Inception",
+                original_title = "Inception",
+                overview = "A mind-bending thriller where dreams can be controlled.",
+                poster_path = "https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/430042eb-ee69-4818-aed0-a312400a26bf/300x450",
+                vote_average = 8.8f,
+                vote_count = 20000,
+                actors = listOf(),
+                genres = listOf("Action", "Sci-Fi", "Thriller"),
+                status_id = 1,
+                user_score = 9,
+                release_date = "2010-07-16",
+                budget = 160000000,
+                revenue = 12312,
+                runtime = 148
             ),
             Movie(
-                "zzzzzz3",
-                "zzzzzzzzzzzzzzzzzzz3",
-                "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/8uOIWsrHvBTeZP4LSf25NomvLb6.jpg"
+                id = 1,
+                title = "Inception",
+                original_title = "Inception",
+                overview = "A mind-bending thriller where dreams can be controlled.",
+                poster_path = "https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/430042eb-ee69-4818-aed0-a312400a26bf/300x450",
+                vote_average = 8.8f,
+                vote_count = 20000,
+                actors = listOf(),
+                genres = listOf("Action", "Sci-Fi", "Thriller"),
+                status_id = 1,
+                user_score = 9,
+                release_date = "2010-07-16",
+                budget = 160000000,
+                revenue = 12321,
+                runtime = 148
             ),
             Movie(
-                "zzzzzz4",
-                "zzzzzzzzzzzzzzzzzzz4",
-                "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/aOpByJVRjjKncEYIOQZD3CcpYdE.jpg"
-            ),
-            Movie(
-                "zzzzzz5",
-                "zzzzzzzzzzzzzzzzzzz5",
-                "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/lXjjq925EMCWEBh9iISMFLKrBtg.jpg"
-            ),
-            Movie(
-                "Человек-паук: Через вселенные",
-                "2018, фильм",
-                "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/wmEKJr81CABBU68Qy2wYPwQHn0L.jpg"
+                id = 1,
+                title = "Inception",
+                original_title = "Inception",
+                overview = "A mind-bending thriller where dreams can be controlled.",
+                poster_path = "https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/430042eb-ee69-4818-aed0-a312400a26bf/300x450",
+                vote_average = 8.8f,
+                vote_count = 20000,
+                actors = listOf(),
+                genres = listOf("Action", "Sci-Fi", "Thriller"),
+                status_id = 1,
+                user_score = 9,
+                release_date = "2010-07-16",
+                budget = 160000000,
+                revenue = 12321,
+                runtime = 148
             )
         )
     }

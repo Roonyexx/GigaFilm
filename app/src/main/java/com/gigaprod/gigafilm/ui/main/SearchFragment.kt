@@ -11,12 +11,10 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gigaprod.gigafilm.R
 import com.gigaprod.gigafilm.adapter.MovieListAdapter
 import com.gigaprod.gigafilm.api.ApiClient
-import com.gigaprod.gigafilm.model.Movie
 import kotlinx.coroutines.launch
 import kotlin.math.max
 

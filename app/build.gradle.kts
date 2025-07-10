@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(  libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.android)
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.2.0"
 }
 
 android {
@@ -44,11 +45,12 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.cardview)
-
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("com.squareup.retrofit2:retrofit:3.0.0")
     implementation("com.squareup.retrofit2:converter-gson:3.0.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.9.1")
+    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
     implementation(libs.androidx.legacy.support.v4)
     implementation(libs.androidx.recyclerview)
     testImplementation(libs.junit)

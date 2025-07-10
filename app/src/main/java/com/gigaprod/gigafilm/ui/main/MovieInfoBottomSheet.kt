@@ -1,5 +1,6 @@
 package com.gigaprod.gigafilm.ui.dialog
 
+import Content
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,12 +11,11 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.gigaprod.gigafilm.R
-import com.gigaprod.gigafilm.model.Movie
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.color.MaterialColors
 
-class MovieInfoBottomSheet(private val movie: Movie) : BottomSheetDialogFragment() {
+class MovieInfoBottomSheet(private val movie: Content) : BottomSheetDialogFragment() {
 
 
     override fun onCreateView(
@@ -26,8 +26,8 @@ class MovieInfoBottomSheet(private val movie: Movie) : BottomSheetDialogFragment
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        view.findViewById<TextView>(R.id.titleTextView).text = movie.title
-        view.findViewById<TextView>(R.id.descriptionTextView).text = movie.description
+        view.findViewById<TextView>(R.id.titleTextView).text = movie.getDisplayName()
+        view.findViewById<TextView>(R.id.descriptionTextView).text = movie.overview
 
         val posterImageView = view.findViewById<ImageView>(R.id.posterImageView)
         Glide.with(this).load(movie.poster_path).into(posterImageView)
