@@ -1,8 +1,7 @@
 import com.gigaprod.gigafilm.model.Actor
-import kotlinx.serialization.Contextual
+import com.gigaprod.gigafilm.model.Director
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import java.math.BigInteger
 
 @Serializable
 @SerialName("film")
@@ -18,6 +17,7 @@ data class Movie(
     override val genres: List<String>? = null,
     override val status_id: Int? = null,
     override val user_score: Int? = null,
+    val director: Director? = null,
     val release_date: String?,
     val budget : Int?,
     val revenue : Long?,
