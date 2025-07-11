@@ -11,11 +11,11 @@ data class LoginResponse(val ok: Boolean, val access_token: String)
 @Serializable
 data class RegisterRequest(val username: String, val password: String)
 @Serializable
-data class RegisterResponse(val ok: Boolean)
+data class StandartResponse(val ok: Boolean)
 
 interface authApi {
     @POST("auth/register")
-    suspend fun register(@Body request: RegisterRequest): Response<RegisterResponse>
+    suspend fun register(@Body request: RegisterRequest): Response<StandartResponse>
     @POST("auth/login")
     suspend fun login(@Body request: LoginRequest): Response<LoginResponse>
 }

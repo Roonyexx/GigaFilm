@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.gigaprod.gigafilm.R
 import com.gigaprod.gigafilm.adapter.MovieListAdapter
 import com.gigaprod.gigafilm.api.ApiClient
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.max
 
@@ -23,6 +25,8 @@ class SearchFragment : Fragment() {
     private lateinit var searchInput: EditText
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MovieListAdapter
+
+    private var searchJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,20 +51,24 @@ class SearchFragment : Fragment() {
         searchInput.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 val query = s.toString().trim()
-                if (query.length >= 1) {
-                    performSearch(query)
-                } else {
-                    adapter = MovieListAdapter(mutableListOf())
-                    recyclerView.adapter = adapter
+
+                searchJob?.cancel()
+                searchJob = lifecycleScope.launch {
+                    delay(300)
+                    if (query.isNotEmpty()) {
+                        performSearch(query)
+                    } else {
+                        adapter = MovieListAdapter(mutableListOf())
+                        recyclerView.adapter = adapter
+                    }
                 }
             }
+
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
     }
-
-
 
     private fun calculateSpanCount(context: Context, itemWidthDp: Int): Int {
         val displayMetrics = context.resources.displayMetrics

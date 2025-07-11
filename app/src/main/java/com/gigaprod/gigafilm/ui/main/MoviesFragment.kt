@@ -7,19 +7,34 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.gigaprod.gigafilm.R
 import com.gigaprod.gigafilm.adapter.MovieAdapter
+import com.gigaprod.gigafilm.api.ApiClient
+import com.gigaprod.gigafilm.api.StandartResponse
+import com.gigaprod.gigafilm.api.contentStatus
 import com.gigaprod.gigafilm.ui.custom.CardStackLayoutManager
 import com.gigaprod.gigafilm.ui.dialog.MovieInfoBottomSheet
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import retrofit2.Response
 
+enum class Status(val status: Int) {
+    like(1),
+    dislike(2),
+    unrated(3)
+}
 class MoviesFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MovieAdapter
     private var infoShown = false
+
+    private var RecommedationsJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,11 +67,25 @@ class MoviesFragment : Fragment() {
                 val movie = adapter.currentList()[position]
 
                 when (direction) {
-                    ItemTouchHelper.LEFT -> {
+                    ItemTouchHelper.LEFT, ItemTouchHelper.RIGHT -> {
                         adapter.removeAt(position)
-                    }
-                    ItemTouchHelper.RIGHT -> {
-                        adapter.removeAt(position)
+                        if (adapter.itemCount < 5 && (RecommedationsJob == null || RecommedationsJob?.isActive == false)) {
+                            RecommedationsJob = lifecycleScope.launch {
+                                val content: List<Content> = ApiClient.serverMediaApi.getRecommendations()
+                                adapter.addMovieList(content.toMutableList())
+                            }
+                        }
+                        lifecycleScope.launch {
+                            if (direction == ItemTouchHelper.LEFT) movie.status_id = Status.dislike.status
+                            else movie.status_id = Status.like.status
+
+                            val request: contentStatus =
+                                contentStatus(movie.id, movie.contentType, movie.status_id!!)
+                            val response: Response<StandartResponse> = ApiClient.serverMediaApi.setContentStatus(request)
+                            if(response.body()?.ok == true) {
+                                Toast.makeText(context, "ok", Toast.LENGTH_SHORT).show()
+                            }
+                        }
                     }
                     ItemTouchHelper.UP -> {
                         MovieInfoBottomSheet(movie).show(parentFragmentManager, "movie_info")
@@ -133,6 +162,40 @@ class MoviesFragment : Fragment() {
                 release_date = "2010-07-16",
                 budget = 160000000,
                 revenue = 12312,
+                runtime = 148
+            ),
+            Movie(
+                id = 1,
+                title = "Inception",
+                original_title = "Inception",
+                overview = "A mind-bending thriller where dreams can be controlled.",
+                poster_path = "https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/430042eb-ee69-4818-aed0-a312400a26bf/300x450",
+                vote_average = 8.8f,
+                vote_count = 20000,
+                actors = listOf(),
+                genres = listOf("Action", "Sci-Fi", "Thriller"),
+                status_id = 1,
+                user_score = 9,
+                release_date = "2010-07-16",
+                budget = 160000000,
+                revenue = 12321,
+                runtime = 148
+            ),
+            Movie(
+                id = 1,
+                title = "Inception",
+                original_title = "Inception",
+                overview = "A mind-bending thriller where dreams can be controlled.",
+                poster_path = "https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/430042eb-ee69-4818-aed0-a312400a26bf/300x450",
+                vote_average = 8.8f,
+                vote_count = 20000,
+                actors = listOf(),
+                genres = listOf("Action", "Sci-Fi", "Thriller"),
+                status_id = 1,
+                user_score = 9,
+                release_date = "2010-07-16",
+                budget = 160000000,
+                revenue = 12321,
                 runtime = 148
             ),
             Movie(

@@ -18,11 +18,12 @@ data class Tv(
     val first_air_date: String?,
     val last_air_date: String?,
     val status: String?,
-    val number_of_episodes: String?,
-    val number_of_seasons: String?,
+    val number_of_episodes: Int?,
+    val number_of_seasons: Int?,
     override val genres: List<String>? = null,
-    override val status_id: Int? = null,
-    override val user_score: Int? = null
+    override var status_id: Int? = null,
+    override var user_score: Int? = null,
+    override val contentType: String = "tv"
 ) : Content()
 {
     override fun getDisplayName(): String = name

@@ -14,6 +14,8 @@ object ApiClient {
     lateinit var serverAuthApi: authApi private set
     lateinit var serverSearchApi: searchApi private set
     lateinit var serverProfileApi: profileApi private set
+
+    lateinit var serverMediaApi: mediaApi private set
     private lateinit var appContext: Context
 
     fun setToken(newToken: String) {
@@ -32,5 +34,6 @@ object ApiClient {
         serverAuthApi = retrofit!!.create(authApi::class.java)
         serverSearchApi = retrofit!!.create(searchApi::class.java)
         serverProfileApi = retrofit!!.create(profileApi::class.java)
+        serverMediaApi = retrofit!!.create(mediaApi::class.java)
     }
 }

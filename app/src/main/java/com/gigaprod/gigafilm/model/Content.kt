@@ -12,7 +12,9 @@ sealed class Content {
     abstract val vote_count: Int?
     abstract val actors: List<Actor>?
     abstract val genres: List<String>?
-    abstract val status_id: Int?
-    abstract val user_score: Int?
+    abstract var status_id: Int?
+    abstract var user_score: Int?
+
+    abstract val contentType: String
     abstract fun getDisplayName():String
 }

@@ -33,14 +33,14 @@ class MovieAdapter(
         val movie = movies[position]
         holder.title.text = movie.getDisplayName()
         holder.description.text = movie.overview
-        Glide.with(holder.itemView).load(movie.poster_path).override(800,1200).into(holder.image)
+        val url = "https://image.tmdb.org/t/p/w600_and_h900_bestv2" + movie.poster_path
+        Glide.with(holder.itemView).load(url).override(800,1200).into(holder.image)
     }
 
     fun removeAt(position: Int) {
         val movie : Content = movies[position]
         movies.removeAt(position)
         notifyItemRemoved(position)
-        movies.add(movie)
     }
 
     fun addMovie(movie: Content) {

@@ -16,12 +16,13 @@ data class Movie(
     override val vote_count: Int?,
     override val actors: List<Actor>? = null,
     override val genres: List<String>? = null,
-    override val status_id: Int? = null,
-    override val user_score: Int? = null,
+    override var status_id: Int? = null,
+    override var user_score: Int? = null,
     val release_date: String?,
     val budget : Int?,
     val revenue : Long?,
-    val runtime: Int?
+    val runtime: Int?,
+    override val contentType: String = "film"
 ) : Content()
 {
     override fun getDisplayName(): String = title
