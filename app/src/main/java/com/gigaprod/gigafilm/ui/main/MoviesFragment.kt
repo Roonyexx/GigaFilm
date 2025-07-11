@@ -49,9 +49,12 @@ class MoviesFragment : Fragment() {
         recyclerView = view.findViewById(R.id.recyclerView)
         recyclerView.layoutManager = CardStackLayoutManager()
 
-        adapter = MovieAdapter(sampleMovies().toMutableList())
-        recyclerView.adapter = adapter
 
+        lifecycleScope.launch {
+            val content: List<Content> = ApiClient.serverMediaApi.getRecommendations()
+            adapter = MovieAdapter(content.toMutableList())
+            recyclerView.adapter = adapter
+        }
 
         val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
             0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT or ItemTouchHelper.UP
@@ -71,22 +74,26 @@ class MoviesFragment : Fragment() {
                         adapter.removeAt(position)
                         if (adapter.itemCount < 5 && (RecommedationsJob == null || RecommedationsJob?.isActive == false)) {
                             RecommedationsJob = lifecycleScope.launch {
-                                val content: List<Content> = ApiClient.serverMediaApi.getRecommendations()
+                                val content: List<Content> =
+                                    ApiClient.serverMediaApi.getRecommendations()
                                 adapter.addMovieList(content.toMutableList())
                             }
                         }
                         lifecycleScope.launch {
-                            if (direction == ItemTouchHelper.LEFT) movie.status_id = Status.dislike.status
+                            if (direction == ItemTouchHelper.LEFT) movie.status_id =
+                                Status.dislike.status
                             else movie.status_id = Status.like.status
 
                             val request: contentStatus =
                                 contentStatus(movie.id, movie.contentType, movie.status_id!!)
-                            val response: Response<StandartResponse> = ApiClient.serverMediaApi.setContentStatus(request)
-                            if(response.body()?.ok == true) {
+                            val response: Response<StandartResponse> =
+                                ApiClient.serverMediaApi.setContentStatus(request)
+                            if (response.body()?.ok == true) {
                                 Toast.makeText(context, "ok", Toast.LENGTH_SHORT).show()
                             }
                         }
                     }
+
                     ItemTouchHelper.UP -> {
                         MovieInfoBottomSheet(movie).show(parentFragmentManager, "movie_info")
 
@@ -119,119 +126,20 @@ class MoviesFragment : Fragment() {
                     viewHolder.itemView.translationX = dX
                     viewHolder.itemView.translationY = clampedDY
                 } else {
-                    super.onChildDraw(c, recyclerView, viewHolder, dX, clampedDY, actionState, isCurrentlyActive)
+                    super.onChildDraw(
+                        c,
+                        recyclerView,
+                        viewHolder,
+                        dX,
+                        clampedDY,
+                        actionState,
+                        isCurrentlyActive
+                    )
                 }
             }
         })
 
 
         itemTouchHelper.attachToRecyclerView(recyclerView)
-    }
-
-    private fun sampleMovies(): List<Content> {
-        return listOf(
-            Movie(
-                id = 1,
-                title = "Inception",
-                original_title = "Inception",
-                overview = "A mind-bending thriller where dreams can be controlled.",
-                poster_path = "https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/430042eb-ee69-4818-aed0-a312400a26bf/300x450",
-                vote_average = 8.8f,
-                vote_count = 20000,
-                actors = listOf(),
-                //genres = listOf("Action", "Sci-Fi", "Thriller"),
-                status_id = 1,
-                user_score = 9,
-                release_date = "2010-07-16",
-                budget = 160000000,
-                revenue = 1234,
-                runtime = 148
-            ),
-            Movie(
-                id = 1,
-                title = "Inception",
-                original_title = "Inception",
-                overview = "A mind-bending thriller where dreams can be controlled.",
-                poster_path = "https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/430042eb-ee69-4818-aed0-a312400a26bf/300x450",
-                vote_average = 8.8f,
-                vote_count = 20000,
-                actors = listOf(),
-                //genres = listOf("Action", "Sci-Fi", "Thriller"),
-                status_id = 1,
-                user_score = 9,
-                release_date = "2010-07-16",
-                budget = 160000000,
-                revenue = 12312,
-                runtime = 148
-            ),
-            Movie(
-                id = 1,
-                title = "Inception",
-                original_title = "Inception",
-                overview = "A mind-bending thriller where dreams can be controlled.",
-                poster_path = "https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/430042eb-ee69-4818-aed0-a312400a26bf/300x450",
-                vote_average = 8.8f,
-                vote_count = 20000,
-                actors = listOf(),
-               //genres = listOf("Action", "Sci-Fi", "Thriller"),
-                status_id = 1,
-                user_score = 9,
-                release_date = "2010-07-16",
-                budget = 160000000,
-                revenue = 12321,
-                runtime = 148
-            ),
-            Movie(
-                id = 1,
-                title = "Inception",
-                original_title = "Inception",
-                overview = "A mind-bending thriller where dreams can be controlled.",
-                poster_path = "https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/430042eb-ee69-4818-aed0-a312400a26bf/300x450",
-                vote_average = 8.8f,
-                vote_count = 20000,
-                actors = listOf(),
-                //genres = listOf("Action", "Sci-Fi", "Thriller"),
-                status_id = 1,
-                user_score = 9,
-                release_date = "2010-07-16",
-                budget = 160000000,
-                revenue = 12321,
-                runtime = 148
-            ),
-            Movie(
-                id = 1,
-                title = "Inception",
-                original_title = "Inception",
-                overview = "A mind-bending thriller where dreams can be controlled.",
-                poster_path = "https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/430042eb-ee69-4818-aed0-a312400a26bf/300x450",
-                vote_average = 8.8f,
-                vote_count = 20000,
-                actors = listOf(),
-                //genres = listOf("Action", "Sci-Fi", "Thriller"),
-                status_id = 1,
-                user_score = 9,
-                release_date = "2010-07-16",
-                budget = 160000000,
-                revenue = 12321,
-                runtime = 148
-            ),
-            Movie(
-                id = 1,
-                title = "Inception",
-                original_title = "Inception",
-                overview = "A mind-bending thriller where dreams can be controlled.",
-                poster_path = "https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/430042eb-ee69-4818-aed0-a312400a26bf/300x450",
-                vote_average = 8.8f,
-                vote_count = 20000,
-                actors = listOf(),
-                //genres = listOf("Action", "Sci-Fi", "Thriller"),
-                status_id = 1,
-                user_score = 9,
-                release_date = "2010-07-16",
-                budget = 160000000,
-                revenue = 12321,
-                runtime = 148
-            )
-        )
     }
 }
