@@ -1,6 +1,5 @@
 package com.gigaprod.gigafilm.ui.main
 
-import android.app.FragmentContainer
 import android.os.Bundle
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -13,11 +12,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import android.view.ViewTreeObserver
 
 class MainActivity : AppCompatActivity() {
-
     private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var moviesFragment: MoviesFragment
-    private lateinit var profileFragment: ProfileFragment
-    private lateinit var searchFragment: SearchFragment
+    private var profileFragment: ProfileFragment? = null
+    private var searchFragment: SearchFragment? = null
     private var activeFragment: Fragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,9 +23,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         bottomNavigationView = findViewById(R.id.bottom_navigation)
+
+        // Создаем и сразу загружаем только MoviesFragment
         moviesFragment = MoviesFragment()
-        profileFragment = ProfileFragment()
-        searchFragment = SearchFragment()
 
         val fragmentContainer = findViewById<FrameLayout>(R.id.fragmentContainer)
 
@@ -35,7 +33,6 @@ class MainActivity : AppCompatActivity() {
             override fun onGlobalLayout() {
                 bottomNavigationView.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 val navHeight = bottomNavigationView.height
-
                 ViewCompat.setOnApplyWindowInsetsListener(fragmentContainer) { view, insets ->
                     val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
                     view.updatePadding(
@@ -46,24 +43,19 @@ class MainActivity : AppCompatActivity() {
                     )
                     insets
                 }
-
                 ViewCompat.requestApplyInsets(fragmentContainer)
             }
         })
 
-        setupFragments()
+        setupInitialFragment()
         setupBottomNavigation()
     }
 
-    private fun setupFragments() {
+    private fun setupInitialFragment() {
+        // Загружаем только стартовый фрагмент
         supportFragmentManager.beginTransaction()
             .add(R.id.fragmentContainer, moviesFragment, "moviesFragment")
-            .add(R.id.fragmentContainer, profileFragment, "profileFragment")
-            .add(R.id.fragmentContainer,searchFragment, "searchFragment")
-            .hide(profileFragment)
-            .hide(searchFragment)
             .commit()
-
         activeFragment = moviesFragment
     }
 
@@ -71,11 +63,33 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> switchFragment(moviesFragment)
-                R.id.nav_profile -> switchFragment(profileFragment)
-                R.id.nav_search -> switchFragment(searchFragment)
+                R.id.nav_profile -> switchFragment(getProfileFragment())
+                R.id.nav_search -> switchFragment(getSearchFragment())
             }
             true
         }
+    }
+
+    private fun getProfileFragment(): ProfileFragment {
+        if (profileFragment == null) {
+            profileFragment = ProfileFragment()
+            supportFragmentManager.beginTransaction()
+                .add(R.id.fragmentContainer, profileFragment!!, "profileFragment")
+                .hide(profileFragment!!)
+                .commit()
+        }
+        return profileFragment!!
+    }
+
+    private fun getSearchFragment(): SearchFragment {
+        if (searchFragment == null) {
+            searchFragment = SearchFragment()
+            supportFragmentManager.beginTransaction()
+                .add(R.id.fragmentContainer, searchFragment!!, "searchFragment")
+                .hide(searchFragment!!)
+                .commit()
+        }
+        return searchFragment!!
     }
 
     private fun switchFragment(target: Fragment) {
@@ -85,7 +99,6 @@ class MainActivity : AppCompatActivity() {
             .hide(activeFragment!!)
             .show(target)
             .commit()
-
         activeFragment = target
     }
 }

@@ -1,4 +1,5 @@
 import com.gigaprod.gigafilm.model.Actor
+import com.gigaprod.gigafilm.model.Genre
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
@@ -20,11 +21,21 @@ data class Tv(
     val status: String?,
     val number_of_episodes: Int?,
     val number_of_seasons: Int?,
-    override val genres: List<String>? = null,
+    override val genres: List<Genre>? = null,
     override var status_id: Int? = null,
     override var user_score: Int? = null,
     override val contentType: String = "tv"
 ) : Content()
 {
     override fun getDisplayName(): String = name
+    override fun getDescription(): String {
+        val firstDate = first_air_date?.take(4)
+        val lastDate = last_air_date?.take(4) ?: ""
+        val date = if ((firstDate != lastDate) && lastDate != "") "$firstDate - $lastDate"
+                   else firstDate
+
+        val genre = (", " + genres?.firstOrNull()?.name) ?: ""
+        val res = "Сериал, $date$genre"
+        return res
+    }
 }

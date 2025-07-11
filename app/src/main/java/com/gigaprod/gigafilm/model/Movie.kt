@@ -1,7 +1,10 @@
 import com.gigaprod.gigafilm.model.Actor
+import com.gigaprod.gigafilm.model.Director
+import com.gigaprod.gigafilm.model.Genre
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import java.time.format.DateTimeFormatter
 
 @Serializable
 @SerialName("film")
@@ -14,7 +17,7 @@ data class Movie(
     override val vote_average: Float?,
     override val vote_count: Int?,
     override val actors: List<Actor>? = null,
-    override val genres: List<String>? = null,
+    override val genres: List<Genre>? = null,
     override var status_id: Int? = null,
     override var user_score: Int? = null,
     val director: Director? = null,
@@ -26,6 +29,13 @@ data class Movie(
 ) : Content()
 {
     override fun getDisplayName(): String = title
+    override fun getDescription(): String {
+
+        val res: String = "Фильм, " +
+                (release_date?.take(4) ?: "") + ", " +
+                (genres?.firstOrNull()?.name ?: "")
+        return res
+    }
 }
 
 

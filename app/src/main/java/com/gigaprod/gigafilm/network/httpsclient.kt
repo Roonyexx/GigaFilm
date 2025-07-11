@@ -1,4 +1,4 @@
-package com.gigaprod.gigafilm.api
+package com.gigaprod.gigafilm.network
 
 import android.content.Context
 import com.gigaprod.gigafilm.R

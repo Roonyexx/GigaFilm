@@ -32,7 +32,7 @@ class MovieAdapter(
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         val movie = movies[position]
         holder.title.text = movie.getDisplayName()
-        holder.description.text = movie.overview
+        holder.description.text = movie.getDescription()
         val url = "https://image.tmdb.org/t/p/w600_and_h900_bestv2" + movie.poster_path
         Glide.with(holder.itemView).load(url).override(800,1200).into(holder.image)
     }

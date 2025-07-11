@@ -2,6 +2,7 @@ package com.gigaprod.gigafilm.api
 
 import android.content.Context
 import com.gigaprod.gigafilm.network.JsonProvider
+import com.gigaprod.gigafilm.network.getSafeOkHttpClient
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
