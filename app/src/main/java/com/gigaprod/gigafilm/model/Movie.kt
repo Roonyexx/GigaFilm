@@ -1,6 +1,7 @@
 import com.gigaprod.gigafilm.model.Actor
 import com.gigaprod.gigafilm.model.Director
 import com.gigaprod.gigafilm.model.Genre
+import com.gigaprod.gigafilm.ui.custom.formatDate
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -36,6 +37,14 @@ data class Movie(
                 (genres?.firstOrNull()?.name ?: "")
         return res
     }
-}
 
+    override fun getBaseInfo(): String {
+        val formattedDate = formatDate(release_date)
+        return "Оценка: ${vote_average?.toString() ?: "-"} (${vote_count?.toString() ?: "-"})\n" +
+                "Дата выхода: ${formattedDate}\n" +
+                "Режиссёр: ${director?.name ?: "-"}\n" +
+                "Бюджет: ${budget?.let { "$it$" } ?: "-"}\n" +
+                "Длительность: ${runtime?.let { "$it мин." } ?: "-"}"
+    }
+}
 

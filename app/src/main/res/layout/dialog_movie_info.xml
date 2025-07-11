@@ -25,7 +25,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="0dp">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/posterCardView"
@@ -34,10 +34,10 @@
                 android:layout_marginEnd="16dp"
                 app:cardCornerRadius="24dp"
                 app:cardElevation="0dp"
+                app:layout_constraintDimensionRatio="2:3"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_percent="0.35"
-                app:layout_constraintDimensionRatio="2:3">
+                app:layout_constraintWidth_percent="0.35">
 
                 <ImageView
                     android:id="@+id/posterImageView"
@@ -48,18 +48,31 @@
             </androidx.cardview.widget.CardView>
 
             <TextView
-                android:id="@+id/descriptionTextView"
+                android:id="@+id/baseInfoTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/standard_text_size"
-                android:textColor="?attr/colorOnSurface"
+                android:lineSpacingMultiplier="1.5"
                 android:paddingLeft="12dp"
-                app:layout_constraintStart_toEndOf="@id/posterCardView"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="@dimen/standard_text_size"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/posterCardView"
                 app:layout_constraintTop_toTopOf="@id/posterCardView" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/genresTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:paddingLeft="12dp"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="@dimen/standard_text_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/posterCardView"
+                app:layout_constraintTop_toBottomOf="@id/baseInfoTextView" />
 
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
             android:id="@+id/ratingBar"
@@ -141,6 +154,28 @@
                 />
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/title_text_size"
+                android:text=" Описание:"
+                android:textStyle="bold"
+                android:textColor="?attr/colorOnSurface"/>
+
+            <TextView
+                android:id="@+id/overviewTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/standard_text_size"
+                android:textColor="?attr/colorOnSurface"
+                android:lineSpacingMultiplier="1.2"
+                android:padding="4dp"/>
+        </LinearLayout>
 
 
 

@@ -27,7 +27,9 @@ class MovieInfoBottomSheet(private val movie: Content) : BottomSheetDialogFragme
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         view.findViewById<TextView>(R.id.titleTextView).text = movie.getDisplayName()
-        view.findViewById<TextView>(R.id.descriptionTextView).text = movie.overview
+        view.findViewById<TextView>(R.id.baseInfoTextView).text = movie.getBaseInfo()
+        view.findViewById<TextView>(R.id.genresTextView).text = movie.getGenresList()
+        view.findViewById<TextView>(R.id.overviewTextView).text = movie.overview
 
         val posterImageView = view.findViewById<ImageView>(R.id.posterImageView)
         val url = "https://image.tmdb.org/t/p/w600_and_h900_bestv2" + movie.poster_path

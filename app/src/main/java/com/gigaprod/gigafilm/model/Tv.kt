@@ -1,5 +1,6 @@
 import com.gigaprod.gigafilm.model.Actor
 import com.gigaprod.gigafilm.model.Genre
+import com.gigaprod.gigafilm.ui.custom.formatDate
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
@@ -34,8 +35,18 @@ data class Tv(
         val date = if ((firstDate != lastDate) && lastDate != "") "$firstDate - $lastDate"
                    else firstDate
 
-        val genre = (", " + genres?.firstOrNull()?.name) ?: ""
+        val genre = genres?.firstOrNull()?.name?.let { ", $it" } ?: ""
         val res = "Сериал, $date$genre"
         return res
+    }
+
+    override fun getBaseInfo(): String {
+        val firstDateFormatted = formatDate(first_air_date)
+        val lastDateFormatted = formatDate(last_air_date)
+        return "Оценка: ${vote_average?.toString() ?: "-"} (${vote_count?.toString() ?: "-"})\n" +
+                "Премьера: ${firstDateFormatted}\n" +
+                "Финал: ${lastDateFormatted}\n" +
+                "Сезоны: ${number_of_seasons?.toString() ?: "-"}\n" +
+                "Эпизоды: ${number_of_episodes?.toString() ?: "-"}"
     }
 }

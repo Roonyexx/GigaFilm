@@ -18,6 +18,11 @@ sealed class Content {
 
     abstract val contentType: String
     abstract fun getDisplayName():String
-
     abstract fun getDescription(): String
+    abstract fun getBaseInfo(): String
+    fun getGenresList(): String {
+        val genresStr = genres?.joinToString(", ") { it.name } ?: "-"
+        return "Жанры: $genresStr"
+    }
+
 }
