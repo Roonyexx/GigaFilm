@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.gigaprod.gigafilm.R
 import com.gigaprod.gigafilm.adapter.MovieListAdapter
 import com.gigaprod.gigafilm.api.ApiClient
+import com.gigaprod.gigafilm.network.ServerRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -25,6 +26,7 @@ class SearchFragment : Fragment() {
     private lateinit var searchInput: EditText
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MovieListAdapter
+    private lateinit var serverRepository: ServerRepository
 
     private var searchJob: Job? = null
 
@@ -40,6 +42,9 @@ class SearchFragment : Fragment() {
 
         searchInput = view.findViewById(R.id.searchEditText)
         recyclerView = view.findViewById(R.id.searchRecyclerView)
+
+        val activity = requireActivity() as MainActivity
+        serverRepository = activity.serverRepository
 
 
         val spanCount = calculateSpanCount(requireContext(), 160)
@@ -78,14 +83,9 @@ class SearchFragment : Fragment() {
 
     private fun performSearch(query: String) {
         lifecycleScope.launch {
-            try {
-                val movies = ApiClient.serverSearchApi.searchMovies(query)
-                adapter = MovieListAdapter(movies.toMutableList())
-                recyclerView.adapter = adapter
-            } catch (e: Exception) {
-                Log.e("Search", "Ошибка при загрузке фильмов: ${e.message}", e)
-                Toast.makeText(requireContext(), "Ошибка загрузки фильмов: ${e.message}", Toast.LENGTH_LONG).show()
-            }
+            val movies = serverRepository.searchMovies(query)
+            adapter = MovieListAdapter(movies.toMutableList())
+            recyclerView.adapter = adapter
         }
     }
 }

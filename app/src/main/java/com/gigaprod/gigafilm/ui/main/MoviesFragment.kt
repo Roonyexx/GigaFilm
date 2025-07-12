@@ -2,6 +2,7 @@ package com.gigaprod.gigafilm.ui.main
 
 import Content
 import Movie
+import android.app.AlertDialog
 import android.graphics.Canvas
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,12 +15,13 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.gigaprod.gigafilm.R
 import com.gigaprod.gigafilm.adapter.MovieAdapter
-import com.gigaprod.gigafilm.api.ApiClient
 import com.gigaprod.gigafilm.api.StandartResponse
 import com.gigaprod.gigafilm.api.contentStatus
+import com.gigaprod.gigafilm.network.ServerRepository
 import com.gigaprod.gigafilm.ui.custom.CardStackLayoutManager
 import com.gigaprod.gigafilm.ui.dialog.MovieInfoBottomSheet
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
@@ -35,6 +37,7 @@ class MoviesFragment : Fragment() {
     private var infoShown = false
 
     private var RecommedationsJob: Job? = null
+    private lateinit var serverRepository: ServerRepository
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,12 +52,14 @@ class MoviesFragment : Fragment() {
         recyclerView = view.findViewById(R.id.recyclerView)
         recyclerView.layoutManager = CardStackLayoutManager()
 
+        val activity = requireActivity() as MainActivity
+        serverRepository = activity.serverRepository
 
         lifecycleScope.launch {
-            val content: List<Content> = ApiClient.serverMediaApi.getRecommendations()
-            adapter = MovieAdapter(content.toMutableList())
+            adapter = MovieAdapter(serverRepository.getRecommendations().toMutableList())
             recyclerView.adapter = adapter
         }
+
 
         val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
             0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT or ItemTouchHelper.UP
@@ -72,25 +77,22 @@ class MoviesFragment : Fragment() {
                 when (direction) {
                     ItemTouchHelper.LEFT, ItemTouchHelper.RIGHT -> {
                         adapter.removeAt(position)
+
                         if (adapter.itemCount < 5 && (RecommedationsJob == null || RecommedationsJob?.isActive == false)) {
                             RecommedationsJob = lifecycleScope.launch {
                                 val content: List<Content> =
-                                    ApiClient.serverMediaApi.getRecommendations()
+                                    serverRepository.getRecommendations()
                                 adapter.addMovieList(content.toMutableList())
                             }
                         }
                         lifecycleScope.launch {
-                            if (direction == ItemTouchHelper.LEFT) movie.status_id =
-                                Status.dislike.status
+                            if (direction == ItemTouchHelper.LEFT) movie.status_id = Status.dislike.status
                             else movie.status_id = Status.like.status
 
                             val request: contentStatus =
                                 contentStatus(movie.id, movie.contentType, movie.status_id!!)
-                            val response: Response<StandartResponse> =
-                                ApiClient.serverMediaApi.setContentStatus(request)
-                            if (response.body()?.ok == true) {
-                                Toast.makeText(context, "ok", Toast.LENGTH_SHORT).show()
-                            }
+                            val response: StandartResponse =
+                                serverRepository.setContentStatus(request)
                         }
                     }
 

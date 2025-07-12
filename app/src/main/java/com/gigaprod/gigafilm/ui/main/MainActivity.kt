@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import com.gigaprod.gigafilm.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import android.view.ViewTreeObserver
+import com.gigaprod.gigafilm.network.ServerRepository
 
 class MainActivity : AppCompatActivity() {
     private lateinit var bottomNavigationView: BottomNavigationView
@@ -17,6 +18,7 @@ class MainActivity : AppCompatActivity() {
     private var profileFragment: ProfileFragment? = null
     private var searchFragment: SearchFragment? = null
     private var activeFragment: Fragment? = null
+    val serverRepository: ServerRepository = ServerRepository()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +26,6 @@ class MainActivity : AppCompatActivity() {
 
         bottomNavigationView = findViewById(R.id.bottom_navigation)
 
-        // Создаем и сразу загружаем только MoviesFragment
         moviesFragment = MoviesFragment()
 
         val fragmentContainer = findViewById<FrameLayout>(R.id.fragmentContainer)
@@ -49,10 +50,11 @@ class MainActivity : AppCompatActivity() {
 
         setupInitialFragment()
         setupBottomNavigation()
+
+
     }
 
     private fun setupInitialFragment() {
-        // Загружаем только стартовый фрагмент
         supportFragmentManager.beginTransaction()
             .add(R.id.fragmentContainer, moviesFragment, "moviesFragment")
             .commit()

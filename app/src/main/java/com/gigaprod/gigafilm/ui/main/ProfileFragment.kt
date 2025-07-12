@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.gigaprod.gigafilm.R
 import com.gigaprod.gigafilm.adapter.MovieListAdapter
 import com.gigaprod.gigafilm.api.ApiClient
+import com.gigaprod.gigafilm.network.ServerRepository
 import kotlinx.coroutines.launch
 import kotlin.math.max
 
@@ -20,6 +21,7 @@ import kotlin.math.max
 class ProfileFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var movieAdapter: MovieListAdapter
+    private lateinit var serverRepository: ServerRepository
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,11 +33,14 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         recyclerView = view.findViewById(R.id.recyclerMovies)
 
+        val activity = requireActivity() as MainActivity
+        serverRepository = activity.serverRepository
+
         val spanCount = calculateSpanCount(requireContext(), 160)
         recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
 
         lifecycleScope.launch {
-            val profileMovies: List<Content> = ApiClient.serverProfileApi.getUserFilms()
+            val profileMovies: List<Content> = serverRepository.getUserFilms()
             movieAdapter = MovieListAdapter(profileMovies.toMutableList())
             recyclerView.adapter = movieAdapter
         }
