@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -19,6 +20,7 @@ import com.gigaprod.gigafilm.api.StandartResponse
 import com.gigaprod.gigafilm.api.contentStatus
 import com.gigaprod.gigafilm.network.ServerRepository
 import com.gigaprod.gigafilm.ui.custom.CardStackLayoutManager
+import com.gigaprod.gigafilm.ui.custom.SharedViewModel
 import com.gigaprod.gigafilm.ui.dialog.MovieInfoBottomSheet
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -35,9 +37,11 @@ class MoviesFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MovieAdapter
     private var infoShown = false
-
     private var RecommedationsJob: Job? = null
     private lateinit var serverRepository: ServerRepository
+
+    private val sharedViewModel: SharedViewModel by activityViewModels()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -89,6 +93,8 @@ class MoviesFragment : Fragment() {
                             if (direction == ItemTouchHelper.LEFT) movie.status_id = Status.dislike.status
                             else movie.status_id = Status.like.status
 
+                            sendData(movie)
+
                             val request: contentStatus =
                                 contentStatus(movie.id, movie.contentType, movie.status_id!!)
                             val response: StandartResponse =
@@ -97,7 +103,10 @@ class MoviesFragment : Fragment() {
                     }
 
                     ItemTouchHelper.UP -> {
-                        MovieInfoBottomSheet(movie).show(parentFragmentManager, "movie_info")
+                        val existing = parentFragmentManager.findFragmentByTag("movie_info")
+                        if (existing == null) {
+                            MovieInfoBottomSheet(movie).show(parentFragmentManager, "movie_info")
+                        }
 
                         viewHolder.itemView.animate()
                             .translationX(0f)
@@ -143,5 +152,8 @@ class MoviesFragment : Fragment() {
 
 
         itemTouchHelper.attachToRecyclerView(recyclerView)
+    }
+    private fun sendData(content: Content) {
+        sharedViewModel.setContent(content)
     }
 }

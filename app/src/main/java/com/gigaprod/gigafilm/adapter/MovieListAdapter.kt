@@ -61,7 +61,12 @@ class MovieListAdapter(
         notifyItemInserted(movies.size)
     }
 
-    fun addMovieList(movieList: MutableList<Content>) {
+    fun addMovieAtStart(content: Content) {
+        movies.add(0, content)
+        notifyItemInserted(0)
+    }
+
+    fun addMovieList(movieList: List<Content>) {
         for (movie in movieList) {
             addMovie(movie)
         }
