@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.gigaprod.gigafilm.R
 import com.bumptech.glide.Glide
+import com.gigaprod.gigafilm.ui.main.Status
 
 
 class MovieListAdapter(
@@ -21,6 +22,8 @@ class MovieListAdapter(
         val title: TextView = view.findViewById(R.id.filmTitleText)
         val image: ImageView = view.findViewById(R.id.posterFilmImage)
         val userRating: TextView = view.findViewById(R.id.filmRatingText)
+        val stausIcon: ImageView = view.findViewById(R.id.statusImage)
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
@@ -37,7 +40,13 @@ class MovieListAdapter(
         holder.userRating.text = movie.user_score?.toString() ?: "-"
         val url = "https://image.tmdb.org/t/p/w600_and_h900_bestv2" + movie.poster_path
         Glide.with(holder.itemView).load(url).override(160,240).into(holder.image)
-
+        val icon : Int? = when(movie.status_id) {
+            Status.like.status -> { R.drawable.ic_like }
+            Status.dislike.status -> { R.drawable.ic_dislike }
+            null -> null
+            else -> null
+        }
+        if (icon != null) holder.stausIcon.setImageResource(icon)
     }
 
     fun removeAt(position: Int) {
