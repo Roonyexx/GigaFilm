@@ -16,6 +16,7 @@ import com.gigaprod.gigafilm.R
 import com.gigaprod.gigafilm.adapter.MovieListAdapter
 import com.gigaprod.gigafilm.api.ApiClient
 import com.gigaprod.gigafilm.network.ServerRepository
+import com.gigaprod.gigafilm.ui.dialog.MovieInfoBottomSheet
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -50,7 +51,7 @@ class SearchFragment : Fragment() {
         val spanCount = calculateSpanCount(requireContext(), 160)
         recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
 
-        adapter = MovieListAdapter(mutableListOf())
+        adapter = MovieListAdapter(mutableListOf()) {}
         recyclerView.adapter = adapter
 
         searchInput.addTextChangedListener(object : TextWatcher {
@@ -63,7 +64,7 @@ class SearchFragment : Fragment() {
                     if (query.isNotEmpty()) {
                         performSearch(query)
                     } else {
-                        adapter = MovieListAdapter(mutableListOf())
+                        adapter = MovieListAdapter(mutableListOf()) {}
                         recyclerView.adapter = adapter
                     }
                 }
@@ -84,7 +85,11 @@ class SearchFragment : Fragment() {
     private fun performSearch(query: String) {
         lifecycleScope.launch {
             val movies = serverRepository.searchMovies(query)
-            adapter = MovieListAdapter(mutableListOf())
+            adapter = MovieListAdapter(mutableListOf()) { content ->
+                val existing = parentFragmentManager.findFragmentByTag("movie_info")
+                if(existing == null)
+                    MovieInfoBottomSheet(content).show(parentFragmentManager, "movie_info")
+            }
             recyclerView.adapter = adapter
             adapter.addMovieList(movies)
         }

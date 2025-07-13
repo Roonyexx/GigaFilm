@@ -16,6 +16,7 @@ import com.gigaprod.gigafilm.adapter.MovieListAdapter
 import com.gigaprod.gigafilm.api.ApiClient
 import com.gigaprod.gigafilm.network.ServerRepository
 import com.gigaprod.gigafilm.ui.custom.SharedViewModel
+import com.gigaprod.gigafilm.ui.dialog.MovieInfoBottomSheet
 import kotlinx.coroutines.launch
 import kotlin.math.max
 
@@ -43,7 +44,11 @@ class ProfileFragment : Fragment() {
         val spanCount = calculateSpanCount(requireContext(), 160)
         recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
 
-        movieAdapter = MovieListAdapter(mutableListOf())
+        movieAdapter = MovieListAdapter(mutableListOf()) { content ->
+            val existing = parentFragmentManager.findFragmentByTag("movie_info")
+            if(existing == null)
+                MovieInfoBottomSheet(content).show(parentFragmentManager, "movie_info")
+        }
         recyclerView.adapter = movieAdapter
 
         sharedViewModel.content.observe(viewLifecycleOwner) { content ->
