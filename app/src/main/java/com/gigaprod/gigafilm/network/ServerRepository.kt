@@ -1,13 +1,12 @@
 package com.gigaprod.gigafilm.network
 
 import Content
-import androidx.lifecycle.lifecycleScope
-import com.gigaprod.gigafilm.adapter.MovieAdapter
 import com.gigaprod.gigafilm.api.ApiClient
 import com.gigaprod.gigafilm.api.StandartResponse
+import com.gigaprod.gigafilm.api.ContentBase
 import com.gigaprod.gigafilm.api.contentStatus
 import com.gigaprod.gigafilm.api.mediaApi
-import kotlinx.coroutines.launch
+import com.gigaprod.gigafilm.api.ContentSource
 import retrofit2.Response
 
 
@@ -71,5 +70,21 @@ class ServerRepository() {
             }
         } while(result.isFailure)
         return result.getOrNull()!!
+    }
+
+    suspend fun getWatchSource(content: ContentBase): List<ContentSource>? {
+        var result: Result<List<ContentSource>>
+        val maxAttempts = 3
+        var attempts = 0
+        do {
+            result = try {
+                attempts++
+                val response = api.whereToWatch(content)
+                Result.success(response)
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        } while(result.isFailure && attempts < maxAttempts)
+        return result.getOrNull()
     }
 }

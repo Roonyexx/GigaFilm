@@ -9,10 +9,22 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 
 @Serializable
+data class ContentBase(
+    val id: Int,
+    val content_type: String
+)
+
+@Serializable
 data class contentStatus(
     val content_id: Int,
     val content_type: String,
     val status_id: Int
+)
+
+@Serializable
+data class ContentSource(
+    val link: String,
+    val img_src: String
 )
 
 interface mediaApi {
@@ -24,4 +36,7 @@ interface mediaApi {
     suspend fun searchMovies(@Query("query") query: String): List <Content>
     @GET("get_info/user_films")
     suspend fun getUserFilms(): List<Content>
+    @POST("get_info/where_to_watch")
+    suspend fun whereToWatch(@Body request: ContentBase) : List<ContentSource>
+
 }

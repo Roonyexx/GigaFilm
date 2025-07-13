@@ -10,19 +10,29 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.gigaprod.gigafilm.R
 import com.gigaprod.gigafilm.adapter.ActorCardAdapter
+import com.gigaprod.gigafilm.adapter.ContentSourceAdapter
+import com.gigaprod.gigafilm.api.ContentBase
+import com.gigaprod.gigafilm.api.ContentSource
+import com.gigaprod.gigafilm.network.ServerRepository
 import com.gigaprod.gigafilm.ui.custom.getVoteColor
+import com.gigaprod.gigafilm.ui.main.MainActivity
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.color.MaterialColors
+import kotlinx.coroutines.launch
 
 class MovieInfoBottomSheet(private val movie: Content) : BottomSheetDialogFragment() {
 
     private lateinit var actorsRecyclerView: RecyclerView
+    private lateinit var sourcesRecyclerView: RecyclerView
+
+    private lateinit var serverRepository: ServerRepository
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,8 +46,16 @@ class MovieInfoBottomSheet(private val movie: Content) : BottomSheetDialogFragme
         view.findViewById<TextView>(R.id.baseInfoTextView).text = movie.getBaseInfo()
         view.findViewById<TextView>(R.id.genresTextView).text = movie.getGenresList()
         view.findViewById<TextView>(R.id.overviewTextView).text = movie.overview
+        val activity = requireActivity() as MainActivity
+        serverRepository = activity.serverRepository
+
         actorsRecyclerView = view.findViewById(R.id.actorsRecyclerView)
+        sourcesRecyclerView = view.findViewById(R.id.sourcesRecyclerView)
+
         actorsRecyclerView.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+
+        sourcesRecyclerView.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
 
@@ -47,9 +65,18 @@ class MovieInfoBottomSheet(private val movie: Content) : BottomSheetDialogFragme
 
         ratingViewSetup(view)
 
-        val adapter: ActorCardAdapter = ActorCardAdapter(movie.actors?.toMutableList() ?: mutableListOf())
-        actorsRecyclerView.adapter = adapter
-        if(adapter.itemCount == 0) view.findViewById<LinearLayout>(R.id.actorsLayout).visibility = View.GONE
+        val actorAdapter: ActorCardAdapter = ActorCardAdapter(movie.actors?.toMutableList() ?: mutableListOf())
+        actorsRecyclerView.adapter = actorAdapter
+        if(actorAdapter.itemCount == 0) view.findViewById<LinearLayout>(R.id.actorsLayout).visibility = View.GONE
+
+        lifecycleScope.launch {
+            val sourcedContent: ContentBase = ContentBase(movie.id, movie.contentType)
+            val sources: List<ContentSource>? = serverRepository.getWatchSource(sourcedContent)
+
+            val sourcesAdapter: ContentSourceAdapter = ContentSourceAdapter(sources?.toMutableList() ?: mutableListOf())
+            sourcesRecyclerView.adapter = sourcesAdapter
+            if(sourcesAdapter.itemCount != 0) view.findViewById<LinearLayout>(R.id.sourcesLayout).visibility = View.VISIBLE
+        }
     }
 
 
