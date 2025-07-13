@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -47,6 +48,7 @@ class MovieInfoBottomSheet(private val movie: Content) : BottomSheetDialogFragme
 
         val adapter: ActorCardAdapter = ActorCardAdapter(movie.actors?.toMutableList() ?: mutableListOf())
         actorsRecyclerView.adapter = adapter
+        if(adapter.itemCount == 0) view.findViewById<LinearLayout>(R.id.actorsLayout).visibility = View.GONE
     }
 
 

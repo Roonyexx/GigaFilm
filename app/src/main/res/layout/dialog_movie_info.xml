@@ -98,7 +98,6 @@
                 app:tint="?attr/colorOnSurface"
                 android:layout_gravity="center"/>
 
-            <!-- Цифры 1–10 -->
             <TextView
                 android:id="@+id/rating1"
                 style="@style/RatingNumberStyle"
@@ -177,13 +176,29 @@
                 android:padding="4dp"/>
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_marginVertical="@dimen/standard_margin"
-            android:id="@+id/actorsRecyclerView"
+        <LinearLayout
+            android:id="@+id/actorsLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            />
+            android:orientation="vertical"
+            android:layout_marginVertical="@dimen/standard_margin">
 
+            <TextView
+                android:id="@+id/actorsLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Актёры:"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="@dimen/title_text_size"
+                android:textStyle="bold"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/actorsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginVertical="8dp"/>
+        </LinearLayout>
 
 
     </LinearLayout>
