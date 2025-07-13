@@ -21,6 +21,7 @@ class MovieAdapter(
         val title: TextView = view.findViewById(R.id.filmTitleText)
         val description: TextView = view.findViewById(R.id.filmDescriptionText)
         val image: ImageView = view.findViewById(R.id.posterFilmImage)
+        val voteAverage: TextView = view.findViewById(R.id.voteAverage)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
@@ -34,6 +35,18 @@ class MovieAdapter(
         val movie = movies[position]
         holder.title.text = movie.getDisplayName()
         holder.description.text = movie.getDescription()
+
+        if(movie.vote_count!= 0) {
+            val ratingValue = movie.vote_average ?: 0f
+            val backgroundRes = when {
+                ratingValue < 3f -> R.drawable.bg_rating_red
+                ratingValue < 7f -> R.drawable.bg_rating_neutral
+                else -> R.drawable.bg_rating_green
+            }
+            holder.voteAverage.setBackgroundResource(backgroundRes)
+            holder.voteAverage.text = movie.vote_average.toString()
+        }
+
         val url = "https://image.tmdb.org/t/p/w600_and_h900_bestv2" + movie.poster_path
         Glide.with(holder.itemView)
             .load(url)

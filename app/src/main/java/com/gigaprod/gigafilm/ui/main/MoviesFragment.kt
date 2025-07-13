@@ -100,6 +100,7 @@ class MoviesFragment : Fragment() {
                             val response: StandartResponse =
                                 serverRepository.setContentStatus(request)
                         }
+
                     }
 
                     ItemTouchHelper.UP -> {

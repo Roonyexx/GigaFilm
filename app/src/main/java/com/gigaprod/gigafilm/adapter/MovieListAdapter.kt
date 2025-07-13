@@ -26,8 +26,9 @@ class MovieListAdapter(
         val userRating: TextView = view.findViewById(R.id.filmRatingText)
         val stausIcon: ImageView = view.findViewById(R.id.statusImage)
 
-        fun bind(content: Content, onItemClick: (Content) -> Unit) {
+        val voteAverage: TextView = view.findViewById(R.id.voteAverage)
 
+        fun bind(content: Content, onItemClick: (Content) -> Unit) {
             title.text = content.getDisplayName()
             userRating.text = content.user_score?.toString() ?: "-"
             val url = "https://image.tmdb.org/t/p/w600_and_h900_bestv2" + content.poster_path
@@ -44,19 +45,17 @@ class MovieListAdapter(
             }
             if (icon != null) stausIcon.setImageResource(icon)
 
-
-
             view.setOnClickListener {
                 onItemClick(content)
             }
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_movie_profile_card, parent, false)
         return MovieViewHolder(view)
     }
+
 
     override fun getItemCount(): Int = movies.size
 
