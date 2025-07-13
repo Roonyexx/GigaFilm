@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.gigaprod.gigafilm.R
 import com.gigaprod.gigafilm.adapter.ActorCardAdapter
+import com.gigaprod.gigafilm.ui.custom.getVoteColor
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.color.MaterialColors
@@ -82,13 +83,8 @@ class MovieInfoBottomSheet(private val movie: Content) : BottomSheetDialogFragme
 
 
                 val selectedRating = index + 1
-                val colorRes = when {
-                    selectedRating <= 4 -> R.color.rating_red
-                    selectedRating <= 6 -> R.color.rating_gray
-                    else -> R.color.rating_green
-                }
+                val colorRes = getVoteColor(selectedRating.toFloat())
                 val selectedColor = ContextCompat.getColor(requireContext(), colorRes)
-
 
                 textView.setTextColor(selectedColor)
 

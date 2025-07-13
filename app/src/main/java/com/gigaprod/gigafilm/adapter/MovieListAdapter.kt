@@ -45,6 +45,16 @@ class MovieListAdapter(
             }
             if (icon != null) stausIcon.setImageResource(icon)
 
+            if(content.vote_count!= 0) {
+                val ratingValue = content.vote_average ?: 0f
+                val backgroundRes = when {
+                    ratingValue < 5f -> R.drawable.bg_rating_red
+                    ratingValue < 7f -> R.drawable.bg_rating_neutral
+                    else -> R.drawable.bg_rating_green
+                }
+                voteAverage.setBackgroundResource(backgroundRes)
+                voteAverage.text = content.vote_average.toString()
+            }
             view.setOnClickListener {
                 onItemClick(content)
             }
