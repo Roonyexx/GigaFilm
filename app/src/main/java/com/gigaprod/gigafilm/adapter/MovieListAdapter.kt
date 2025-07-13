@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.gigaprod.gigafilm.R
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.gigaprod.gigafilm.ui.main.Status
 
 
@@ -39,7 +40,11 @@ class MovieListAdapter(
         holder.title.text = movie.getDisplayName()
         holder.userRating.text = movie.user_score?.toString() ?: "-"
         val url = "https://image.tmdb.org/t/p/w600_and_h900_bestv2" + movie.poster_path
-        Glide.with(holder.itemView).load(url).override(160,240).into(holder.image)
+        Glide.with(holder.itemView)
+            .load(url)
+            .override(160,240)
+            .transition(DrawableTransitionOptions.withCrossFade())
+            .into(holder.image)
         val icon : Int? = when(movie.status_id) {
             Status.like.status -> { R.drawable.ic_like }
             Status.dislike.status -> { R.drawable.ic_dislike }
@@ -47,6 +52,17 @@ class MovieListAdapter(
             else -> null
         }
         if (icon != null) holder.stausIcon.setImageResource(icon)
+
+        startUpAnimate(holder)
+    }
+    private fun startUpAnimate(holder: MovieViewHolder) {
+        holder.itemView.alpha = 0f
+        holder.itemView.translationY = 30f
+        holder.itemView.animate()
+            .alpha(1f)
+            .translationY(0f)
+            .setDuration(300)
+            .start()
     }
 
     fun removeAt(position: Int) {

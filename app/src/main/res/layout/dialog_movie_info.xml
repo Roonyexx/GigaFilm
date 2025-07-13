@@ -79,7 +79,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:orientation="horizontal"
-            android:background="@drawable/rating_background"
+            android:background="@drawable/rounded_background"
             android:gravity="center_vertical"
             android:weightSum="11"
             android:layout_marginTop="16dp"
@@ -176,6 +176,13 @@
                 android:lineSpacingMultiplier="1.2"
                 android:padding="4dp"/>
         </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_marginVertical="@dimen/standard_margin"
+            android:id="@+id/actorsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
 
 
 

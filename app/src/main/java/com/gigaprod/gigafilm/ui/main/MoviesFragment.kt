@@ -154,6 +154,7 @@ class MoviesFragment : Fragment() {
         itemTouchHelper.attachToRecyclerView(recyclerView)
     }
     private fun sendData(content: Content) {
+
         sharedViewModel.setContent(content)
     }
 }

@@ -9,6 +9,7 @@ class SharedViewModel : ViewModel() {
     val content: LiveData<Content> = _content
 
     fun setContent(data: Content) {
-        _content.value = data
+        if(content.hasObservers())
+            _content.value = data
     }
 }

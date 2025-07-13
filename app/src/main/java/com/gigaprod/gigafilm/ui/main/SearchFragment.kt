@@ -84,8 +84,9 @@ class SearchFragment : Fragment() {
     private fun performSearch(query: String) {
         lifecycleScope.launch {
             val movies = serverRepository.searchMovies(query)
-            adapter = MovieListAdapter(movies.toMutableList())
+            adapter = MovieListAdapter(mutableListOf())
             recyclerView.adapter = adapter
+            adapter.addMovieList(movies)
         }
     }
 }

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.gigaprod.gigafilm.R
 import com.bumptech.glide.*
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 
 class MovieAdapter(
     private val movies: MutableList<Content>
@@ -34,7 +35,11 @@ class MovieAdapter(
         holder.title.text = movie.getDisplayName()
         holder.description.text = movie.getDescription()
         val url = "https://image.tmdb.org/t/p/w600_and_h900_bestv2" + movie.poster_path
-        Glide.with(holder.itemView).load(url).override(800,1200).into(holder.image)
+        Glide.with(holder.itemView)
+            .load(url)
+            .override(800,1200)
+            .transition(DrawableTransitionOptions.withCrossFade())
+            .into(holder.image)
     }
 
     fun removeAt(position: Int) {
