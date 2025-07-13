@@ -6,12 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 
 import com.gigaprod.gigafilm.R
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.gigaprod.gigafilm.ui.main.Status
+import com.google.android.material.color.MaterialColors
 
 
 class MovieListAdapter(
@@ -24,6 +26,8 @@ class MovieListAdapter(
         val image: ImageView = view.findViewById(R.id.posterFilmImage)
         val userRating: TextView = view.findViewById(R.id.filmRatingText)
         val stausIcon: ImageView = view.findViewById(R.id.statusImage)
+
+        val voteAverage: TextView = view.findViewById(R.id.voteAverage)
 
     }
 
@@ -52,6 +56,17 @@ class MovieListAdapter(
             else -> null
         }
         if (icon != null) holder.stausIcon.setImageResource(icon)
+
+        if(movie.vote_count!= 0) {
+            val ratingValue = movie.vote_average ?: 0f
+            val backgroundRes = when {
+                ratingValue < 3f -> R.drawable.bg_rating_red
+                ratingValue < 7f -> R.drawable.bg_rating_neutral
+                else -> R.drawable.bg_rating_green
+            }
+            holder.voteAverage.setBackgroundResource(backgroundRes)
+            holder.voteAverage.text = movie.vote_average.toString()
+        }
 
         startUpAnimate(holder)
     }
