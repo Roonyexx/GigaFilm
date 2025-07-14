@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,19 +21,22 @@ import com.gigaprod.gigafilm.adapter.ContentSourceAdapter
 import com.gigaprod.gigafilm.api.ContentBase
 import com.gigaprod.gigafilm.api.ContentSource
 import com.gigaprod.gigafilm.network.ServerRepository
+import com.gigaprod.gigafilm.ui.custom.SharedViewModel
 import com.gigaprod.gigafilm.ui.custom.getVoteColor
 import com.gigaprod.gigafilm.ui.main.MainActivity
+import com.gigaprod.gigafilm.ui.main.Status
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.color.MaterialColors
 import kotlinx.coroutines.launch
+import kotlin.getValue
 
 class MovieInfoBottomSheet(private val movie: Content) : BottomSheetDialogFragment() {
 
     private lateinit var actorsRecyclerView: RecyclerView
     private lateinit var sourcesRecyclerView: RecyclerView
-
     private lateinit var serverRepository: ServerRepository
+    private val sharedViewModel: SharedViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -105,11 +109,22 @@ class MovieInfoBottomSheet(private val movie: Content) : BottomSheetDialogFragme
 
         ratingViews.forEachIndexed { index, textView ->
             textView.setOnClickListener {
-
-                ratingViews.forEach { it.setTextColor(defaultColor) }
-
-
                 val selectedRating = index + 1
+
+                if(movie.user_score == null && movie.status_id == null) {
+                    movie.user_score = selectedRating
+
+                    movie.status_id = when (selectedRating) {
+                        in 1..5 -> Status.dislike.status
+                        in 6..10 -> Status.like.status
+                        else -> Status.unrated.status
+                    }
+                    sharedViewModel.setContent(movie)
+                }
+                else {
+
+                }
+                ratingViews.forEach { it.setTextColor(defaultColor) }
                 val colorRes = getVoteColor(selectedRating.toFloat())
                 val selectedColor = ContextCompat.getColor(requireContext(), colorRes)
 
