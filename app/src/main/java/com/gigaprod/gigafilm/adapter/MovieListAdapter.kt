@@ -76,10 +76,8 @@ class MovieListAdapter(
     }
     private fun startUpAnimate(holder: MovieViewHolder) {
         holder.itemView.alpha = 0f
-        holder.itemView.translationY = 30f
         holder.itemView.animate()
             .alpha(1f)
-            .translationY(0f)
             .setDuration(300)
             .start()
     }
@@ -105,6 +103,15 @@ class MovieListAdapter(
         for (movie in movieList) {
             addMovie(movie)
         }
+    }
+
+    fun findContentById(id: Int): Int? {
+        movies.forEachIndexed() { index, content  ->
+            if(content.id == id) {
+                return index
+            }
+        }
+        return null
     }
 
     fun currentList(): List<Content> = movies

@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gigaprod.gigafilm.R
 import com.gigaprod.gigafilm.adapter.MovieListAdapter
-import com.gigaprod.gigafilm.api.ApiClient
 import com.gigaprod.gigafilm.network.ServerRepository
 import com.gigaprod.gigafilm.ui.custom.SharedViewModel
 import com.gigaprod.gigafilm.ui.dialog.MovieInfoBottomSheet
@@ -53,6 +52,18 @@ class ProfileFragment : Fragment() {
 
         sharedViewModel.content.observe(viewLifecycleOwner) { content ->
             movieAdapter.addMovieAtStart(content)
+        }
+
+        sharedViewModel.barContent.observe(viewLifecycleOwner) { content ->
+            val index = movieAdapter.findContentById(content.id)
+            val contentToEdit = if (index != null) movieAdapter.currentList()[index] else null
+
+            if(contentToEdit != null) {
+                contentToEdit.status_id = content.status_id
+                contentToEdit.user_score = content.user_score
+                movieAdapter.notifyItemChanged(index!!)
+
+            }
         }
 
         lifecycleScope.launch {

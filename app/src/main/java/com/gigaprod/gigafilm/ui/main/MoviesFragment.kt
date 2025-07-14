@@ -1,14 +1,11 @@
 package com.gigaprod.gigafilm.ui.main
 
 import Content
-import Movie
-import android.app.AlertDialog
 import android.graphics.Canvas
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -17,15 +14,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.gigaprod.gigafilm.R
 import com.gigaprod.gigafilm.adapter.MovieAdapter
 import com.gigaprod.gigafilm.api.StandartResponse
-import com.gigaprod.gigafilm.api.contentStatus
+import com.gigaprod.gigafilm.api.ContentStatus
 import com.gigaprod.gigafilm.network.ServerRepository
 import com.gigaprod.gigafilm.ui.custom.CardStackLayoutManager
 import com.gigaprod.gigafilm.ui.custom.SharedViewModel
 import com.gigaprod.gigafilm.ui.dialog.MovieInfoBottomSheet
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import retrofit2.Response
 
 enum class Status(val status: Int) {
     like(1),
@@ -65,6 +60,7 @@ class MoviesFragment : Fragment() {
         }
 
 
+
         val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
             0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT or ItemTouchHelper.UP
         ) {
@@ -95,8 +91,8 @@ class MoviesFragment : Fragment() {
 
                             sendData(movie)
 
-                            val request: contentStatus =
-                                contentStatus(movie.id, movie.contentType, movie.status_id!!)
+                            val request: ContentStatus =
+                                ContentStatus(movie.id, movie.contentType, movie.status_id!!)
                             val response: StandartResponse =
                                 serverRepository.setContentStatus(request)
                         }
@@ -153,6 +149,13 @@ class MoviesFragment : Fragment() {
 
 
         itemTouchHelper.attachToRecyclerView(recyclerView)
+
+        sharedViewModel.barContent.observe(viewLifecycleOwner) { content ->
+            val index = adapter.findContentById(content.id)
+            if (index != null) {
+                adapter.removeAt(index)
+            }
+        }
     }
     private fun sendData(content: Content) {
 

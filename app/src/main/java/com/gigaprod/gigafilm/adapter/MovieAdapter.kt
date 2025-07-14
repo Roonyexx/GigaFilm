@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.gigaprod.gigafilm.R
 import com.bumptech.glide.*
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.gigaprod.gigafilm.ui.main.Status
 
 class MovieAdapter(
     private val movies: MutableList<Content>
@@ -70,6 +71,15 @@ class MovieAdapter(
         for (movie in movieList) {
             addMovie(movie)
         }
+    }
+
+    fun findContentById(id: Int): Int? {
+        movies.forEachIndexed() { index, content  ->
+            if(content.id == id) {
+                return index
+            }
+        }
+        return null
     }
 
     fun currentList(): List<Content> = movies

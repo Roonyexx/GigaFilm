@@ -4,9 +4,10 @@ import Content
 import com.gigaprod.gigafilm.api.ApiClient
 import com.gigaprod.gigafilm.api.StandartResponse
 import com.gigaprod.gigafilm.api.ContentBase
-import com.gigaprod.gigafilm.api.contentStatus
+import com.gigaprod.gigafilm.api.ContentStatus
 import com.gigaprod.gigafilm.api.mediaApi
 import com.gigaprod.gigafilm.api.ContentSource
+import com.gigaprod.gigafilm.api.ContentScore
 import retrofit2.Response
 
 
@@ -29,11 +30,28 @@ class ServerRepository() {
         return result.getOrNull()!!
     }
 
-    suspend fun setContentStatus(request: contentStatus): StandartResponse {
+    suspend fun setContentStatus(request: ContentStatus): StandartResponse {
         var result: Result<StandartResponse>
         do {
             result = try {
                 val response: Response<StandartResponse> = api.setContentStatus(request)
+                if (response.isSuccessful && response.body() != null) {
+                    Result.success(response.body()!!)
+                } else {
+                    Result.failure(Exception("Ошибка: ${response.code()} ${response.message()}"))
+                }
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        } while (result.isFailure)
+        return result.getOrNull()!!
+    }
+
+    suspend fun setUserScore(request: ContentScore): StandartResponse {
+        var result: Result<StandartResponse>
+        do {
+            result = try {
+                val response: Response<StandartResponse> = api.setUserScore(request)
                 if (response.isSuccessful && response.body() != null) {
                     Result.success(response.body()!!)
                 } else {

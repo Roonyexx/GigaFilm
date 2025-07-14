@@ -19,7 +19,9 @@ import com.gigaprod.gigafilm.R
 import com.gigaprod.gigafilm.adapter.ActorCardAdapter
 import com.gigaprod.gigafilm.adapter.ContentSourceAdapter
 import com.gigaprod.gigafilm.api.ContentBase
+import com.gigaprod.gigafilm.api.ContentScore
 import com.gigaprod.gigafilm.api.ContentSource
+import com.gigaprod.gigafilm.api.ContentStatus
 import com.gigaprod.gigafilm.network.ServerRepository
 import com.gigaprod.gigafilm.ui.custom.SharedViewModel
 import com.gigaprod.gigafilm.ui.custom.getVoteColor
@@ -105,32 +107,50 @@ class MovieInfoBottomSheet(private val movie: Content) : BottomSheetDialogFragme
             R.id.rating6, R.id.rating7, R.id.rating8, R.id.rating9, R.id.rating10
         ).map { view.findViewById<TextView>(it) }
 
+
+        movie.user_score?.let { score ->
+            ratingViews.getOrNull(score - 1)?.setTextColor(
+                ContextCompat.getColor(requireContext(), getVoteColor(score.toFloat()))
+            )
+        }
+
         val defaultColor = MaterialColors.getColor(view, com.google.android.material.R.attr.colorOnSurface)
 
         ratingViews.forEachIndexed { index, textView ->
             textView.setOnClickListener {
                 val selectedRating = index + 1
+                val selectedStatus = when (selectedRating) {
+                    in 1..5 -> Status.dislike.status
+                    in 6..10 -> Status.like.status
+                    else -> Status.unrated.status
+                }
+                val oldScore = movie.user_score
+                val oldStatus = movie.status_id
 
-                if(movie.user_score == null && movie.status_id == null) {
-                    movie.user_score = selectedRating
+                movie.user_score = selectedRating
+                movie.status_id = selectedStatus
 
-                    movie.status_id = when (selectedRating) {
-                        in 1..5 -> Status.dislike.status
-                        in 6..10 -> Status.like.status
-                        else -> Status.unrated.status
-                    }
+
+                if(oldScore == null && (oldStatus == null || oldStatus == Status.unrated.status)) {
                     sharedViewModel.setContent(movie)
+                    sharedViewModel.setBarContent(movie)
                 }
                 else {
-
+                    sharedViewModel.setBarContent(movie)
                 }
+
                 ratingViews.forEach { it.setTextColor(defaultColor) }
                 val colorRes = getVoteColor(selectedRating.toFloat())
                 val selectedColor = ContextCompat.getColor(requireContext(), colorRes)
-
                 textView.setTextColor(selectedColor)
 
-                Toast.makeText(requireContext(), "Оценка: $selectedRating", Toast.LENGTH_SHORT).show()
+                lifecycleScope.launch {
+                    val scoreRequest: ContentScore = ContentScore(movie.id, movie.contentType, selectedRating)
+                    val statusRequest: ContentStatus = ContentStatus(movie.id, movie.contentType, selectedStatus)
+
+                    serverRepository.setUserScore(scoreRequest)
+                    serverRepository.setContentStatus(statusRequest)
+                }
             }
         }
     }

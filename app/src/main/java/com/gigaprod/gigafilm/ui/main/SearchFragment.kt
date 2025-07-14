@@ -9,6 +9,7 @@ import android.view.*
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,10 +17,12 @@ import com.gigaprod.gigafilm.R
 import com.gigaprod.gigafilm.adapter.MovieListAdapter
 import com.gigaprod.gigafilm.api.ApiClient
 import com.gigaprod.gigafilm.network.ServerRepository
+import com.gigaprod.gigafilm.ui.custom.SharedViewModel
 import com.gigaprod.gigafilm.ui.dialog.MovieInfoBottomSheet
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.getValue
 import kotlin.math.max
 
 class SearchFragment : Fragment() {
@@ -28,6 +31,7 @@ class SearchFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MovieListAdapter
     private lateinit var serverRepository: ServerRepository
+    private val sharedViewModel: SharedViewModel by activityViewModels()
 
     private var searchJob: Job? = null
 
@@ -53,6 +57,17 @@ class SearchFragment : Fragment() {
 
         adapter = MovieListAdapter(mutableListOf()) {}
         recyclerView.adapter = adapter
+
+        sharedViewModel.barContent.observe(viewLifecycleOwner) { content ->
+            val index = adapter.findContentById(content.id)
+            val contentToEdit = if (index != null) adapter.currentList()[index] else null
+
+            if(contentToEdit != null) {
+                contentToEdit.status_id = content.status_id
+                contentToEdit.user_score = content.user_score
+                adapter.notifyItemChanged(index!!)
+            }
+        }
 
         searchInput.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
