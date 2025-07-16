@@ -3,27 +3,48 @@
     android:orientation="vertical"
     android:padding="24dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/titleTextView"
+        android:text="Регистрация"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        android:textColor="?attr/colorOnSurface"
+        android:layout_margin="16dp"/>
 
     <EditText
         android:id="@+id/loginInput"
         android:hint="Логин"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:layout_margin="@dimen/standard_margin"
+        android:background="@drawable/rounded_background"/>
 
     <EditText
         android:id="@+id/passwordInput"
         android:hint="Пароль"
         android:inputType="textPassword"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:layout_marginHorizontal="@dimen/standard_margin"
+        android:layout_marginBottom="@dimen/standard_margin"
+        android:background="@drawable/rounded_background"/>
 
     <Button
         android:id="@+id/registerButton"
         android:text="Зарегистрироваться"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:layout_margin="@dimen/standard_margin"
+        android:background="@drawable/buttun_ripple"/>
 
     <TextView
         android:id="@+id/loginLink"
