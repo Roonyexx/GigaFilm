@@ -30,6 +30,7 @@ import com.gigaprod.gigafilm.ui.main.Status
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.color.MaterialColors
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlin.getValue
 
@@ -144,7 +145,7 @@ class MovieInfoBottomSheet(private val movie: Content) : BottomSheetDialogFragme
                 val selectedColor = ContextCompat.getColor(requireContext(), colorRes)
                 textView.setTextColor(selectedColor)
 
-                lifecycleScope.launch {
+                GlobalScope.launch {
                     val scoreRequest: ContentScore = ContentScore(movie.id, movie.contentType, selectedRating)
                     val statusRequest: ContentStatus = ContentStatus(movie.id, movie.contentType, selectedStatus)
 
