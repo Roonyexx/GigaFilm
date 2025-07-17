@@ -158,8 +158,13 @@ class MoviesFragment : Fragment() {
                     else swipeIcon.visibility = View.GONE
                 }
 
-                super.onChildDraw(c, recyclerView, viewHolder, dX, clampedDY, actionState, isCurrentlyActive)
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, clampedDY, actionState, isCurrentlyActive)
             }
+            override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+                super.clearView(recyclerView, viewHolder)
+                swipeIcon.visibility = View.GONE
+            }
+
             private fun animateSwipeIcon(direction: Int, onAnimationEnd: () -> Unit) {
                 currentSwipeAnimation?.cancel()
 
